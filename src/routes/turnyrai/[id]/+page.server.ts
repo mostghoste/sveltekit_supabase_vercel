@@ -25,7 +25,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
     .select('user_id, points')
     .eq('tournament_id', params.id)
 
-    const {data: profiles} = await supabase.from('profiles').select("username, id").eq('id', user?.id)
+    const {data: profiles} = await supabase.from('profiles').select("username, id")
 
     const leaderboardData = tournament_participants?.map(participant => {
       const username = profiles?.find((profile) => {return profile.id === participant.user_id})?.username

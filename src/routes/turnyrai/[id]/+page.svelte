@@ -23,7 +23,9 @@
 	<p>{JSON.stringify(tournament_participant)}</p>
 {:else}
 	<p>Tu šiame turnyre <strong>nedalyvauji</strong></p>
-	<button>Prisijungti</button>
+	<form method="post" action="?/join">
+		<button type="submit">Prisijungti</button>
+	</form>
 {/if}
 
 <h2>Ateinantys žaidimai</h2>

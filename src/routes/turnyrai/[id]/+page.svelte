@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -18,7 +19,7 @@
 		<h2>Admino panelė</h2>
 
 		<h3>Pridėti varžybas</h3>
-		<form method="post" action="?/addMatchup">
+		<form use:enhance method="post" action="?/addMatchup">
 			<div>
 				<label for="team_home">Komanda 1:</label>
 				<input type="text" id="team_home" name="team_home" required />

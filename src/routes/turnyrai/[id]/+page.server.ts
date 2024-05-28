@@ -25,6 +25,12 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
     .select('team_home, team_away')
     .eq('tournament_id', params.id)
 
+
+    const { data: matchup_predictions } = await supabase
+    .from('matchup_prediction')
+    .select('*')
+    .eq("user_id", user?.id)
+
     const { data: tournament_participants } = await supabase
     .from('tournament_participants')
     .select('user_id, points')
@@ -39,7 +45,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
     leaderboardData?.sort((a, b) => b.points - a.points);
 
-    return {tournament: tournament[0], tournament_participant: tournament_participant[0], matchups, tournament_participants: leaderboardData};
+    return {tournament: tournament[0], tournament_participant: tournament_participant[0], matchups, matchup_predictions, tournament_participants: leaderboardData};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

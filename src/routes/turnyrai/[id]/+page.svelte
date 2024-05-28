@@ -3,8 +3,15 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: ({ tournament, user, matchups, profile, tournament_participant, tournament_participants } =
-		data);
+	$: ({
+		tournament,
+		user,
+		matchups,
+		profile,
+		tournament_participant,
+		matchup_predictions,
+		tournament_participants
+	} = data);
 </script>
 
 <h2>Turnyras</h2>
@@ -54,8 +61,21 @@
 	<p>Ateinančių varžybų nerasta</p>
 {/if}
 
-<h2>Dalyvių taškai</h2>
+<h2>Mano spėjimai</h2>
+<h3>Dar neatlikti spėjimai</h3>
+<!-- Insert selection form here -->
+<h3>Patvirtinti spėjimai</h3>
+{#if matchup_predictions && matchup_predictions.length > 0}
+	<ul>
+		{#each matchup_predictions as prediction}
+			<li>{JSON.stringify(prediction)}</li>
+		{/each}
+	</ul>
+{:else}
+	<p>Dar neatlikai jokių spėjimų</p>
+{/if}
 
+<h2>Dalyvių taškai</h2>
 {#if tournament_participants}
 	<p>Dalyvių skaičius: {tournament_participants.length}</p>
 	<ol>

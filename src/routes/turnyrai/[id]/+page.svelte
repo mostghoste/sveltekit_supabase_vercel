@@ -2,7 +2,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: ({ tournament, user, profile, tournament_participant } = data);
+	$: ({ tournament, user, profile, tournament_participant, tournament_participants } = data);
 </script>
 
 <h2>Turnyras</h2>
@@ -20,7 +20,6 @@
 
 {#if tournament_participant}
 	<p>Tu šiame turnyre <strong>dalyvauji</strong></p>
-	<p>{JSON.stringify(tournament_participant)}</p>
 {:else}
 	<p>Tu šiame turnyre <strong>nedalyvauji</strong></p>
 	<form method="post" action="?/join">
@@ -31,3 +30,14 @@
 <h2>Ateinantys žaidimai</h2>
 
 <h2>Dalyvių taškai</h2>
+
+{#if tournament_participants}
+	<p>Dalyvių skaičius: {tournament_participants.length}</p>
+	<ol>
+		{#each tournament_participants as participant}
+			<li>{participant.username} - {participant.points}</li>
+		{/each}
+	</ol>
+{:else}
+	<p>Dalyvių nerasta</p>
+{/if}

@@ -1,11 +1,13 @@
 <script>
 	export let data;
-	$: ({ countries, tournaments, user } = data);
+	$: ({ countries, tournaments, user, profile } = data);
 </script>
 
 <h1>Toto!</h1>
 {#if user}
 	<p>Tu prisijungęs kaip: {user.email}</p>
+	<p>Username: {profile?.username}</p>
+	<p>Admin: {profile?.admin}</p>
 
 	<h2>Turnyrai</h2>
 	{#if tournaments}

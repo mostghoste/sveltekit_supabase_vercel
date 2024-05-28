@@ -1,4 +1,4 @@
-import { createBrowserClient, createServerClient, isBrowser, parse } from '@supabase/ssr'
+import { combineChunks, createBrowserClient, createServerClient, isBrowser, parse } from '@supabase/ssr'
 
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public'
 
@@ -47,5 +47,19 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
     data: { user },
   } = await supabase.auth.getUser()
 
-  return { session, supabase, user }
+  if (!user) {
+    return { session, supabase, user, profile: null };
+  }
+
+  const { data: profile, error } = await supabase
+  .from('profiles')
+  .select('username, admin')
+  .eq('id', user.id); // Filter the profiles by the user ID
+
+  if (error) {
+    console.error('Error fetching profile:', error);
+    return { session, supabase, user, profile: null };
+  }
+
+  return { session, supabase, user, profile: profile[0] }
 }

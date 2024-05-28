@@ -22,7 +22,8 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
     const { data: matchups } = await supabase
     .from('matchups')
-    .select('*')
+    .select('team_home, team_away')
+    .eq('tournament_id', params.id)
 
     const { data: tournament_participants } = await supabase
     .from('tournament_participants')
@@ -58,5 +59,28 @@ export const actions: Actions = {
       }
   
       return { success: true, tournament: data };
-    }
+    },
+    addMatchup: async ({ request, params, locals: { supabase } }) => {
+      const formData = await request.formData();
+      const team_home = formData.get('team_home');
+      const team_away = formData.get('team_away');
+
+      if (typeof team_home !== 'string' || typeof team_away !== 'string') {
+          return { error: 'Invalid matchup data' };
+      }
+
+      const { data, error } = await supabase
+          .from('matchups')
+          .insert([
+              { team_home, team_away, tournament_id: params.id }
+          ])
+          .select();
+
+      if (error) {
+          console.error("Error inserting matchup:", error);
+          return { error: 'Error inserting matchup' };
+      }
+
+      return { success: true, matchup: data };
+  }
   };

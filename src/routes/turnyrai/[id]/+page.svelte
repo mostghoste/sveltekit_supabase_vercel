@@ -46,7 +46,7 @@
 	<p>Ateinančių varžybų skaičius: {matchups.length}</p>
 	<ul>
 		{#each matchups as matchup}
-			<li>{JSON.stringify(matchup)}</li>
+			<li>{matchup.team_home} - {matchup.team_away}</li>
 		{/each}
 	</ul>
 {:else}

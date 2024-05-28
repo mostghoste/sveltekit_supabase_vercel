@@ -88,5 +88,29 @@ export const actions: Actions = {
       }
 
       return { success: true, matchup: data };
-  }
+    },
+    makePrediction: async ({ request, params, locals: { supabase, user } }) => {
+        const formData = await request.formData();
+        const matchup_id = formData.get('matchup_id');
+        const selected_team = formData.get('selected_team');
+        const point_difference = formData.get('point_difference');
+
+        if (typeof matchup_id !== 'string' || typeof selected_team !== 'string' || typeof point_difference !== 'string') {
+            return { error: 'Invalid prediction data' };
+        }
+
+        const { data, error } = await supabase
+            .from('matchup_predictions')
+            .insert([
+                { user_id: user?.id, matchup_id, selected_team, point_difference: parseInt(point_difference, 10) }
+            ])
+            .select();
+
+        if (error) {
+            console.error("Error inserting prediction:", error);
+            return { error: 'Error inserting prediction' };
+        }
+
+        return { success: true, prediction: data };
+    }
   };

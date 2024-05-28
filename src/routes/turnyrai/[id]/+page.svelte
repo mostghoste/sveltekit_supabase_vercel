@@ -78,15 +78,31 @@
 		<form use:enhance method="post" action="?/makePrediction">
 			<input type="hidden" name="matchup_id" value={matchup.id} />
 			<div>
-				<label for="selected_team">Pasirink komandą:</label>
-				<select id="selected_team" name="selected_team" required>
-					<option value={matchup.team_home}>{matchup.team_home}</option>
-					<option value={matchup.team_away}>{matchup.team_away}</option>
-				</select>
+				<label>Pasirink komandą:</label>
+				<div>
+					<input
+						type="radio"
+						id="team_home_{matchup.id}"
+						name="selected_team"
+						value={matchup.team_home}
+						required
+					/>
+					<label for="team_home_{matchup.id}">{matchup.team_home}</label>
+				</div>
+				<div>
+					<input
+						type="radio"
+						id="team_away_{matchup.id}"
+						name="selected_team"
+						value={matchup.team_away}
+						required
+					/>
+					<label for="team_away_{matchup.id}">{matchup.team_away}</label>
+				</div>
 			</div>
 			<div>
-				<label for="point_difference">Taškų skirtumas:</label>
-				<input type="number" id="point_difference" name="point_difference" required />
+				<label for="point_difference_{matchup.id}">Taškų skirtumas:</label>
+				<input type="number" id="point_difference_{matchup.id}" name="point_difference" required />
 			</div>
 			<button type="submit">Pateikti spėjimą</button>
 		</form>

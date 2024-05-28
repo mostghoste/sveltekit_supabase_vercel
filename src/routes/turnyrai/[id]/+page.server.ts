@@ -30,6 +30,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
     .from('matchup_predictions')
     .select('matchup_id, selected_team, point_difference')
     .eq("user_id", user?.id)
+    .eq('tournament_id', params.id)
 
     const { data: tournament_participants } = await supabase
     .from('tournament_participants')
@@ -89,7 +90,7 @@ export const actions: Actions = {
 
       return { success: true, matchup: data };
     },
-    makePrediction: async ({ request, locals: { supabase, user } }) => {
+    makePrediction: async ({ request, params, locals: { supabase, user } }) => {
         const formData = await request.formData();
         const matchup_id = formData.get('matchup_id');
         const selected_team = formData.get('selected_team');
@@ -102,7 +103,7 @@ export const actions: Actions = {
         const { data, error } = await supabase
             .from('matchup_predictions')
             .insert([
-                { user_id: user?.id, matchup_id, selected_team, point_difference: parseInt(point_difference, 10) }
+                { user_id: user?.id, tournament_id: params.id, matchup_id, selected_team, point_difference: parseInt(point_difference, 10) }
             ])
             .select();
 

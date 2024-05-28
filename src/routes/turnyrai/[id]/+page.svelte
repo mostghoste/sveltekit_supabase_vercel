@@ -76,60 +76,67 @@
 	<p>Ateinančių varžybų nerasta</p>
 {/if}
 
-<h2>Mano spėjimai</h2>
-<h3>Dar neatlikti spėjimai</h3>
-{#if unpredictedMatchups && unpredictedMatchups.length > 0}
-	{#each unpredictedMatchups as matchup}
-		<form use:enhance method="post" action="?/makePrediction">
-			<input type="hidden" name="matchup_id" value={matchup.id} />
-			<div>
-				<label>Pasirink komandą:</label>
+{#if tournament_participant}
+	<h2>Mano spėjimai</h2>
+	<h3>Dar neatlikti spėjimai</h3>
+	{#if unpredictedMatchups && unpredictedMatchups.length > 0}
+		{#each unpredictedMatchups as matchup}
+			<form use:enhance method="post" action="?/makePrediction">
+				<input type="hidden" name="matchup_id" value={matchup.id} />
 				<div>
-					<input
-						type="radio"
-						id="team_home_{matchup.id}"
-						name="selected_team"
-						value={matchup.team_home}
-						required
-					/>
-					<label for="team_home_{matchup.id}">{matchup.team_home}</label>
+					<label>Pasirink komandą:</label>
+					<div>
+						<input
+							type="radio"
+							id="team_home_{matchup.id}"
+							name="selected_team"
+							value={matchup.team_home}
+							required
+						/>
+						<label for="team_home_{matchup.id}">{matchup.team_home}</label>
+					</div>
+					<div>
+						<input
+							type="radio"
+							id="team_away_{matchup.id}"
+							name="selected_team"
+							value={matchup.team_away}
+							required
+						/>
+						<label for="team_away_{matchup.id}">{matchup.team_away}</label>
+					</div>
 				</div>
 				<div>
+					<label for="point_difference_{matchup.id}">Taškų skirtumas:</label>
 					<input
-						type="radio"
-						id="team_away_{matchup.id}"
-						name="selected_team"
-						value={matchup.team_away}
+						type="number"
+						id="point_difference_{matchup.id}"
+						name="point_difference"
 						required
 					/>
-					<label for="team_away_{matchup.id}">{matchup.team_away}</label>
 				</div>
-			</div>
-			<div>
-				<label for="point_difference_{matchup.id}">Taškų skirtumas:</label>
-				<input type="number" id="point_difference_{matchup.id}" name="point_difference" required />
-			</div>
-			<button type="submit">Pateikti spėjimą</button>
-		</form>
-	{/each}
-{:else}
-	<p>Visi galimi spėjimai atlikti</p>
-{/if}
-
-<h3>Patvirtinti spėjimai</h3>
-{#if matchup_predictions && matchup_predictions.length > 0}
-	<ul>
-		{#each joinedPredictions as prediction}
-			<li>
-				<p>{prediction.team_home} - {prediction.team_away}</p>
-				<p>
-					<strong>{prediction.selected_team}</strong> laimės {prediction.point_difference} taškais
-				</p>
-			</li>
+				<button type="submit">Pateikti spėjimą</button>
+			</form>
 		{/each}
-	</ul>
-{:else}
-	<p>Dar neatlikai jokių spėjimų</p>
+	{:else}
+		<p>Visi galimi spėjimai atlikti</p>
+	{/if}
+
+	<h3>Patvirtinti spėjimai</h3>
+	{#if matchup_predictions && matchup_predictions.length > 0}
+		<ul>
+			{#each joinedPredictions as prediction}
+				<li>
+					<p>{prediction.team_home} - {prediction.team_away}</p>
+					<p>
+						<strong>{prediction.selected_team}</strong> laimės {prediction.point_difference} taškais
+					</p>
+				</li>
+			{/each}
+		</ul>
+	{:else}
+		<p>Dar neatlikai jokių spėjimų</p>
+	{/if}
 {/if}
 
 <h2>Dalyvių taškai</h2>

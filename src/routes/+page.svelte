@@ -1,11 +1,29 @@
 <script>
 	export let data;
-	$: ({ countries } = data);
+	$: ({ countries, tournaments, user } = data);
 </script>
 
-<h1>Welcome to Supabase!</h1>
-<ul>
-	{#each countries as country}
-		<li>{country.name}</li>
-	{/each}
-</ul>
+<h1>Toto!</h1>
+{#if user}
+	<p>Tu prisijungęs kaip: {user.email}</p>
+
+	<h2>Turnyrai</h2>
+	{#if tournaments}
+		<p>Turnyrų skaičius: {tournaments.length}</p>
+		<ul>
+			{#each tournaments as tournament}
+				<li>{tournament.name}</li>
+			{/each}
+		</ul>
+	{:else}
+		<p>Turnyrų nerasta</p>
+	{/if}
+
+	<form method="post" action="?/addTournament">
+		<input type="text" placeholder="Turnyro pavadinimas" name="name" required />
+		<button type="submit">Pridėti</button>
+	</form>
+{:else}
+	<p>Tu dar neprisijungęs</p>
+	<a href="/auth">Prisijungti</a>
+{/if}

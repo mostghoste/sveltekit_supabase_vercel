@@ -14,9 +14,15 @@
 <h1>Toto!</h1>
 {#if user}
 	<p>Tu prisijungęs kaip: {user.email}</p>
-	<p>Username: {profile?.username}</p>
-	<p>Admin: {profile?.admin}</p>
 	<button on:click={logout}>Atsijungti</button>
+	<p>Username: {profile?.username}</p>
+	{#if !profile?.username}
+		<form method="post" action="?/setUsername">
+			<input type="text" name="username" placeholder="Slapyvardis" />
+			<button type="submit">Nustatyti</button>
+		</form>
+	{/if}
+	<p>Admin: {profile?.admin}</p>
 
 	<a href="/turnyrai">Turnyrai</a>
 {:else}

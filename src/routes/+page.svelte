@@ -1,6 +1,14 @@
 <script>
 	export let data;
-	$: ({ countries, tournaments, user, profile } = data);
+	$: ({ user, profile, supabase } = data);
+
+	$: logout = async () => {
+		// console.log('Logging out');
+		const { error } = await supabase.auth.signOut();
+		if (error) {
+			console.error(error);
+		}
+	};
 </script>
 
 <h1>Toto!</h1>
@@ -8,23 +16,9 @@
 	<p>Tu prisijungęs kaip: {user.email}</p>
 	<p>Username: {profile?.username}</p>
 	<p>Admin: {profile?.admin}</p>
+	<button on:click={logout}>Atsijungti</button>
 
-	<h2>Turnyrai</h2>
-	{#if tournaments}
-		<p>Turnyrų skaičius: {tournaments.length}</p>
-		<ul>
-			{#each tournaments as tournament}
-				<li>{tournament.name}</li>
-			{/each}
-		</ul>
-	{:else}
-		<p>Turnyrų nerasta</p>
-	{/if}
-
-	<form method="post" action="?/addTournament">
-		<input type="text" placeholder="Turnyro pavadinimas" name="name" required />
-		<button type="submit">Pridėti</button>
-	</form>
+	<a href="/turnyrai">Turnyrai</a>
 {:else}
 	<p>Tu dar neprisijungęs</p>
 	<a href="/auth">Prisijungti</a>

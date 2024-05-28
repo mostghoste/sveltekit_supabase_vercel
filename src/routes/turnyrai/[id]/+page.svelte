@@ -12,6 +12,16 @@
 		matchup_predictions,
 		tournament_participants
 	} = data);
+
+	let unpredictedMatchups = [];
+
+	$: if (matchups && matchup_predictions) {
+		unpredictedMatchups = matchups.filter((matchup) => {
+			return !matchup_predictions.some((prediction) => prediction.matchup_id === matchup.id);
+		});
+	} else if (matchups && !matchup_predictions) {
+		unpredictedMatchups = matchups;
+	}
 </script>
 
 <h2>Turnyras</h2>
@@ -63,7 +73,7 @@
 
 <h2>Mano spėjimai</h2>
 <h3>Dar neatlikti spėjimai</h3>
-<!-- Insert selection form here -->
+<p>{JSON.stringify(unpredictedMatchups)}</p>
 <h3>Patvirtinti spėjimai</h3>
 {#if matchup_predictions && matchup_predictions.length > 0}
 	<ul>

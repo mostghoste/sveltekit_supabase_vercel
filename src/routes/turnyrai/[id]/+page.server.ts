@@ -22,12 +22,12 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
     const { data: matchups } = await supabase
     .from('matchups')
-    .select('team_home, team_away')
+    .select('team_home, team_away, id')
     .eq('tournament_id', params.id)
 
 
     const { data: matchup_predictions } = await supabase
-    .from('matchup_prediction')
+    .from('matchup_predictions')
     .select('*')
     .eq("user_id", user?.id)
 

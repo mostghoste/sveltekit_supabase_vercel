@@ -22,6 +22,11 @@
 	} else if (matchups && !matchup_predictions) {
 		unpredictedMatchups = matchups;
 	}
+
+	$: joinedPredictions = matchup_predictions?.map((prediction) => {
+		const matchup = matchups?.find((matchup) => prediction.matchup_id === matchup.id);
+		return { ...prediction, team_home: matchup?.team_home, team_away: matchup?.team_away };
+	});
 </script>
 
 <h2>Turnyras</h2>
@@ -114,8 +119,13 @@
 <h3>Patvirtinti spėjimai</h3>
 {#if matchup_predictions && matchup_predictions.length > 0}
 	<ul>
-		{#each matchup_predictions as prediction}
-			<li>{JSON.stringify(prediction)}</li>
+		{#each joinedPredictions as prediction}
+			<li>
+				<p>{prediction.team_home} - {prediction.team_away}</p>
+				<p>
+					<strong>{prediction.selected_team}</strong> laimės {prediction.point_difference} taškais
+				</p>
+			</li>
 		{/each}
 	</ul>
 {:else}

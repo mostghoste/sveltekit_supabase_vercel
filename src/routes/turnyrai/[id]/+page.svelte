@@ -73,7 +73,28 @@
 
 <h2>Mano spėjimai</h2>
 <h3>Dar neatlikti spėjimai</h3>
-<p>{JSON.stringify(unpredictedMatchups)}</p>
+{#if unpredictedMatchups && unpredictedMatchups.length > 0}
+	{#each unpredictedMatchups as matchup}
+		<form use:enhance method="post" action="?/makePrediction">
+			<input type="hidden" name="matchup_id" value={matchup.id} />
+			<div>
+				<label for="selected_team">Pasirink komandą:</label>
+				<select id="selected_team" name="selected_team" required>
+					<option value={matchup.team_home}>{matchup.team_home}</option>
+					<option value={matchup.team_away}>{matchup.team_away}</option>
+				</select>
+			</div>
+			<div>
+				<label for="point_difference">Taškų skirtumas:</label>
+				<input type="number" id="point_difference" name="point_difference" required />
+			</div>
+			<button type="submit">Pateikti spėjimą</button>
+		</form>
+	{/each}
+{:else}
+	<p>Visi galimi spėjimai atlikti</p>
+{/if}
+
 <h3>Patvirtinti spėjimai</h3>
 {#if matchup_predictions && matchup_predictions.length > 0}
 	<ul>

@@ -113,5 +113,41 @@ export const actions: Actions = {
         }
 
         return { success: true, prediction: data };
-    }
+    },
+    openPredictions: async ({ request, params, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const selected_matchups = JSON.parse(formData.get('selected_matchups') as string);
+
+		const { data, error } = await supabase
+			.from('matchups')
+			.update({ predictions_open: true })
+			.in('id', selected_matchups)
+			.eq('tournament_id', params.id)
+			.select();
+
+		if (error) {
+			console.error('Error updating predictions status:', error);
+			return { error: 'Error updating predictions status' };
+		}
+
+		return { success: true, matchups: data };
+	},
+	closePredictions: async ({ request, params, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const selected_matchups = JSON.parse(formData.get('selected_matchups') as string);
+
+		const { data, error } = await supabase
+			.from('matchups')
+			.update({ predictions_open: false })
+			.in('id', selected_matchups)
+			.eq('tournament_id', params.id)
+			.select();
+
+		if (error) {
+			console.error('Error updating predictions status:', error);
+			return { error: 'Error updating predictions status' };
+		}
+
+		return { success: true, matchups: data };
+	}
   };

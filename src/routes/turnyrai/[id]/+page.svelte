@@ -27,6 +27,16 @@
 		const matchup = matchups?.find((matchup) => prediction.matchup_id === matchup.id);
 		return { ...prediction, team_home: matchup?.team_home, team_away: matchup?.team_away };
 	});
+
+	let selectedMatchups = [];
+
+	function toggleMatchupSelection(id: number) {
+		if (selectedMatchups.includes(id)) {
+			selectedMatchups = selectedMatchups.filter((matchupId) => matchupId !== id);
+		} else {
+			selectedMatchups = [...selectedMatchups, id];
+		}
+	}
 </script>
 
 <h2>Turnyras</h2>
@@ -52,6 +62,43 @@
 			</div>
 			<button type="submit">Pridėti</button>
 		</form>
+
+		<h3>Valdyti varžybas</h3>
+		<table>
+			<thead>
+				<tr>
+					<th>Pasirinkti</th>
+					<th>Komanda 1</th>
+					<th>Komanda 2</th>
+					<th>Spėjimai</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#if matchups}
+					{#each matchups as matchup}
+						<tr>
+							<td>
+								<input
+									type="checkbox"
+									checked={selectedMatchups.includes(matchup.id)}
+									on:change={() => toggleMatchupSelection(matchup.id)}
+								/>
+							</td>
+							<td>{matchup.team_home}</td>
+							<td>{matchup.team_away}</td>
+							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
+						</tr>
+					{/each}
+				{/if}
+			</tbody>
+		</table>
+		<form use:enhance method="post" action="?/closePredictions">
+			<input type="hidden" name="selected_matchups" value={JSON.stringify(selectedMatchups)} />
+			<button type="submit" formaction="?/openPredictions" disabled={selectedMatchups.length <= 0}
+				>Atidaryti spėjimus</button
+			>
+			<button type="submit" disabled={selectedMatchups.length <= 0}>Uždaryti spėjimus</button>
+		</form>
 	</div>
 {/if}
 
@@ -69,7 +116,10 @@
 	<p>Ateinančių varžybų skaičius: {matchups.length}</p>
 	<ul>
 		{#each matchups as matchup}
-			<li>{matchup.team_home} - {matchup.team_away}</li>
+			<li>
+				{matchup.team_home} - {matchup.team_away}; Spėjimai
+				<strong>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</strong>
+			</li>
 		{/each}
 	</ul>
 {:else}
@@ -123,7 +173,7 @@
 	{/if}
 
 	<h3>Patvirtinti spėjimai</h3>
-	{#if matchup_predictions && matchup_predictions.length > 0}
+	{#if joinedPredictions && joinedPredictions.length > 0}
 		<ul>
 			{#each joinedPredictions as prediction}
 				<li>

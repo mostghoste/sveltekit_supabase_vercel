@@ -19,6 +19,7 @@
 		unpredictedMatchups = matchups.filter((matchup) => {
 			return !matchup_predictions.some((prediction) => prediction.matchup_id === matchup.id);
 		});
+		unpredictedMatchups = unpredictedMatchups.filter((matchup) => matchup.predictions_open);
 	} else if (matchups && !matchup_predictions) {
 		unpredictedMatchups = matchups;
 	}

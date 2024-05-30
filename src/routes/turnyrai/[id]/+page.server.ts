@@ -94,26 +94,44 @@ export const actions: Actions = {
         const formData = await request.formData();
         const matchup_id = formData.get('matchup_id');
         const selected_team = formData.get('selected_team');
-        const point_difference = formData.get('point_difference');
-
-        if (typeof matchup_id !== 'string' || typeof selected_team !== 'string' || typeof point_difference !== 'string') {
+        const score_home = formData.get('score_home');
+        const score_away = formData.get('score_away');
+        const matchup_outcome = formData.get('selected_team');
+    
+        if (
+            typeof matchup_id !== 'string' ||
+            typeof selected_team !== 'string' ||
+            typeof score_home !== 'string' ||
+            typeof score_away !== 'string'
+        ) {
             return { error: 'Invalid prediction data' };
         }
-
+    
+        const point_difference = Math.abs(parseInt(score_home, 10) - parseInt(score_away, 10));
+    
         const { data, error } = await supabase
             .from('matchup_predictions')
             .insert([
-                { user_id: user?.id, tournament_id: params.id, matchup_id, selected_team, point_difference: parseInt(point_difference, 10) }
+                {
+                    user_id: user?.id,
+                    tournament_id: params.id,
+                    matchup_id,
+                    matchup_outcome,
+                    score_home: parseInt(score_home, 10),
+                    score_away: parseInt(score_away, 10),
+                    point_difference
+                }
             ])
             .select();
-
+    
         if (error) {
             console.error("Error inserting prediction:", error);
             return { error: 'Error inserting prediction' };
         }
-
+    
         return { success: true, prediction: data };
     },
+    
     openPredictions: async ({ request, params, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const selected_matchups = JSON.parse(formData.get('selected_matchups') as string);

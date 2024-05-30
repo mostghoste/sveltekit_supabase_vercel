@@ -294,7 +294,7 @@
 							type="radio"
 							id="team_home_{matchup.id}"
 							name="selected_team"
-							value={matchup.team_home}
+							value="home_win"
 							required
 						/>
 						<label for="team_home_{matchup.id}">{matchup.team_home}</label>
@@ -304,24 +304,18 @@
 							type="radio"
 							id="team_away_{matchup.id}"
 							name="selected_team"
-							value={matchup.team_away}
+							value="away_win"
 							required
 						/>
 						<label for="team_away_{matchup.id}">{matchup.team_away}</label>
 					</div>
 					<div>
-						<input
-							type="radio"
-							id="tie_{matchup.id}"
-							name="selected_team"
-							value="Lygiosios"
-							required
-						/>
-						<label for="team_away_{matchup.id}">Lygiosios</label>
+						<input type="radio" id="tie_{matchup.id}" name="selected_team" value="tie" required />
+						<label for="tie_{matchup.id}">Lygiosios</label>
 					</div>
 				</div>
 				<div>
-					<label for="score_away_{matchup.id}">{matchup.team_home} taškai:</label>
+					<label for="score_home_{matchup.id}">{matchup.team_home} taškai:</label>
 					<input type="number" id="score_home_{matchup.id}" name="score_home" required />
 				</div>
 				<div>

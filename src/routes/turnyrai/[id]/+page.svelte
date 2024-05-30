@@ -49,6 +49,13 @@
 		}
 		allSelected = !allSelected;
 	}
+
+	function updateScore(matchupId: number, field: string, value: number) {
+		const matchup = matchups.find((m) => m.id === matchupId);
+		if (matchup) {
+			matchup[field] = value;
+		}
+	}
 </script>
 
 <h2>Turnyras</h2>
@@ -109,6 +116,8 @@
 									type="number"
 									name="home_score"
 									placeholder={matchup.score_home || '-'}
+									bind:value={matchup.score_home}
+									on:input={(e) => updateScore(matchup.id, 'score_home', e.target.value)}
 								/>
 							</td>
 							<td>
@@ -116,7 +125,9 @@
 									class="score"
 									type="number"
 									name="away_score"
-									placeholder={matchup.score_home || '-'}
+									placeholder={matchup.score_away || '-'}
+									bind:value={matchup.score_away}
+									on:input={(e) => updateScore(matchup.id, 'score_away', e.target.value)}
 								/>
 							</td>
 						</tr>
@@ -125,12 +136,31 @@
 			</tbody>
 		</table>
 		<form use:enhance method="post" action="?/closePredictions">
+			<input
+				type="hidden"
+				name="matchups"
+				value={JSON.stringify(
+					selectedMatchups.map((id) => {
+						const matchup = matchups.find((matchup) => matchup.id === id);
+						return {
+							id: matchup.id,
+							score_home: matchup.score_home,
+							score_away: matchup.score_away,
+							status: matchup.status,
+							team_home: matchup.team_home,
+							team_away: matchup.team_away
+						};
+					})
+				)}
+			/>
 			<input type="hidden" name="selected_matchups" value={JSON.stringify(selectedMatchups)} />
 			<button type="submit" formaction="?/openPredictions" disabled={selectedMatchups.length <= 0}
 				>Atidaryti spėjimus</button
 			>
 			<button type="submit" disabled={selectedMatchups.length <= 0}>Uždaryti spėjimus</button>
-			<button type="submit" disabled={selectedMatchups.length <= 0}>Išsaugoti spėjimus</button>
+			<button type="submit" formaction="?/editMatchups" disabled={selectedMatchups.length <= 0}
+				>Išsaugoti spėjimus</button
+			>
 		</form>
 	</div>
 {/if}

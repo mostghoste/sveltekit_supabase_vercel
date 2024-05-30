@@ -149,5 +149,31 @@ export const actions: Actions = {
 		}
 
 		return { success: true, matchups: data };
+	},
+	editMatchups: async ({ request, params, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const matchups = JSON.parse(formData.get('matchups') as string);
+
+		const updates = matchups.map((matchup: { id: string; score_home: number; score_away: number; status: string }) => ({
+			id: matchup.id,
+			score_home: matchup.score_home,
+			score_away: matchup.score_away,
+			status: matchup.status,
+			team_home: matchup.team_home, // Make sure to include team_home
+			team_away: matchup.team_away // Make sure to include team_away
+		}));
+
+		const { data, error } = await supabase
+			.from('matchups')
+			.upsert(updates)
+			.eq('tournament_id', params.id)
+			.select();
+
+		if (error) {
+			console.error('Error updating matchups:', error);
+			return { error: 'Error updating matchups' };
+		}
+
+		return { success: true, matchups: data };
 	}
   };

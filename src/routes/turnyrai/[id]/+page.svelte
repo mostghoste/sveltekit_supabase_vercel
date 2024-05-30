@@ -69,7 +69,21 @@
 				if (matchup.score_home !== null && matchup.score_away !== null) {
 					valid;
 				} else {
-					alert(JSON.stringify(matchup));
+					errorMessage = 'done varzybos privalo tureti taskus';
+					return false;
+				}
+			}
+
+			if (
+				matchup.status === 'open' ||
+				matchup.status === 'closed' ||
+				matchup.status === 'cancelled'
+			) {
+				if (
+					(matchup.score_home === null && matchup.score_away !== null) ||
+					(matchup.score_home !== null && matchup.score_away === null)
+				) {
+					errorMessage = 'taskus turi tureti arba abi komandos, arba nei viena';
 					return false;
 				}
 			}
@@ -79,6 +93,7 @@
 
 	let successSaving = false;
 	let savingError = false;
+	let errorMessage = '';
 
 	function showloader(millisec) {
 		return new Promise((resolve) => {
@@ -91,6 +106,7 @@
 	async function handleSubmit(event: Event) {
 		successSaving = false;
 		loading = true;
+		errorMessage = '';
 		event.preventDefault();
 		const validate = validateForm();
 		console.log(`Form validation: ${validate}`);
@@ -232,10 +248,6 @@
 				disabled={selectedMatchups.length <= 0}
 				>{#if loading}
 					<p>⏳</p>
-				{:else if successSaving}
-					<p>✅</p>
-				{:else if savingError}
-					❌
 				{:else}
 					<p>💾</p>
 				{/if}
@@ -347,6 +359,15 @@
 	<p>Dalyvių nerasta</p>
 {/if}
 
+{#if errorMessage != ''}
+	<div class="clippy">
+		<p class="emoji">🤓☝️</p>
+	</div>
+	<div class="errorMessage">
+		<p>Akshually, {errorMessage}</p>
+	</div>
+{/if}
+
 <style>
 	td,
 	th {
@@ -361,5 +382,22 @@
 	.score {
 		width: 4rem;
 		text-align: center;
+	}
+
+	.clippy {
+		position: fixed;
+		right: 0.1rem;
+		bottom: -6rem;
+	}
+
+	.emoji {
+		font-size: 6rem;
+	}
+
+	.errorMessage {
+		position: fixed;
+		bottom: 7rem;
+		right: 2rem;
+		max-width: 16rem;
 	}
 </style>

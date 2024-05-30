@@ -38,6 +38,17 @@
 			selectedMatchups = [...selectedMatchups, id];
 		}
 	}
+
+	let allSelected = false;
+
+	function toggleAllMatchups() {
+		if (allSelected) {
+			selectedMatchups = [];
+		} else {
+			selectedMatchups = matchups.map((matchup) => matchup.id);
+		}
+		allSelected = !allSelected;
+	}
 </script>
 
 <h2>Turnyras</h2>
@@ -68,7 +79,7 @@
 		<table>
 			<thead>
 				<tr>
-					<th>✅</th>
+					<th><button on:click={toggleAllMatchups}>✅</button></th>
 					<th>Komanda 1</th>
 					<th>Komanda 2</th>
 					<th>Spėjimai</th>

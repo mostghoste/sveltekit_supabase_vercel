@@ -316,11 +316,11 @@
 				</div>
 				<div>
 					<label for="score_home_{matchup.id}">{matchup.team_home} taškai:</label>
-					<input type="number" id="score_home_{matchup.id}" name="score_home" required />
+					<input type="number" id="score_home_{matchup.id}" name="score_home" placeholder="69" />
 				</div>
 				<div>
 					<label for="score_away_{matchup.id}">{matchup.team_away} taškai:</label>
-					<input type="number" id="score_away_{matchup.id}" name="score_away" required />
+					<input type="number" id="score_away_{matchup.id}" name="score_away" placeholder="69" />
 				</div>
 				<button type="submit">Pateikti spėjimą</button>
 			</form>

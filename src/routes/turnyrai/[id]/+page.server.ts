@@ -106,6 +106,14 @@ export const actions: Actions = {
         ) {
             return { error: 'Invalid prediction data' };
         }
+
+        if(score_home && !score_away || !score_home && score_away) {
+            return { error: 'Invalid score data' };
+        }
+
+        if(matchup_outcome === "tie" && score_home != score_away) {
+            return { error: 'Invalid tie score data' };
+        }
     
         const point_difference = Math.abs(parseInt(score_home, 10) - parseInt(score_away, 10));
     

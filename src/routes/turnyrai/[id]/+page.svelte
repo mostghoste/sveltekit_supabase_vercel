@@ -109,7 +109,17 @@
 							<td>{matchup.team_home}</td>
 							<td>{matchup.team_away}</td>
 							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
-							<td class="center">{matchup.status}</td>
+							<td class="center">
+								<select
+									bind:value={matchup.status}
+									on:change={(e) => updateField(matchup.id, 'status', e.target.value)}
+								>
+									<option value="open">open</option>
+									<option value="closed">closed</option>
+									<option value="done">done</option>
+									<option value="cancelled">cancelled</option>
+								</select>
+							</td>
 							<td>
 								<input
 									class="score"

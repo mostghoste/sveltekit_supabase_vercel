@@ -68,11 +68,13 @@
 		<table>
 			<thead>
 				<tr>
-					<th>Pasirinkti</th>
+					<th>✅</th>
 					<th>Komanda 1</th>
 					<th>Komanda 2</th>
 					<th>Spėjimai</th>
-					<th>Varžybų statusas</th>
+					<th>Statusas</th>
+					<th>1 taškai</th>
+					<th>2 taškai</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -89,7 +91,23 @@
 							<td>{matchup.team_home}</td>
 							<td>{matchup.team_away}</td>
 							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
-							<td>{matchup.status}</td>
+							<td class="center">{matchup.status}</td>
+							<td>
+								<input
+									class="score"
+									type="number"
+									name="home_score"
+									placeholder={matchup.score_home || '-'}
+								/>
+							</td>
+							<td>
+								<input
+									class="score"
+									type="number"
+									name="away_score"
+									placeholder={matchup.score_home || '-'}
+								/>
+							</td>
 						</tr>
 					{/each}
 				{/if}
@@ -101,6 +119,7 @@
 				>Atidaryti spėjimus</button
 			>
 			<button type="submit" disabled={selectedMatchups.length <= 0}>Uždaryti spėjimus</button>
+			<button type="submit" disabled={selectedMatchups.length <= 0}>Išsaugoti spėjimus</button>
 		</form>
 	</div>
 {/if}
@@ -207,3 +226,20 @@
 {:else}
 	<p>Dalyvių nerasta</p>
 {/if}
+
+<style>
+	td,
+	th {
+		border: 1px solid gray;
+		padding: 2px;
+	}
+
+	.center {
+		text-align: center;
+	}
+
+	.score {
+		width: 4rem;
+		text-align: center;
+	}
+</style>

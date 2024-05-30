@@ -286,6 +286,9 @@
 	{#if unpredictedMatchups && unpredictedMatchups.length > 0}
 		{#each unpredictedMatchups as matchup}
 			<form use:enhance method="post" action="?/makePrediction">
+				<input type="hidden" name="home_name" value={matchup.team_home} />
+				<input type="hidden" name="away_name" value={matchup.team_away} />
+
 				<input type="hidden" name="matchup_id" value={matchup.id} />
 				<div>
 					<label>Kas laimės?:</label>

@@ -93,14 +93,14 @@ export const actions: Actions = {
     makePrediction: async ({ request, params, locals: { supabase, user } }) => {
         const formData = await request.formData();
         const matchup_id = formData.get('matchup_id');
-        const selected_team = formData.get('selected_team');
-        const score_home = formData.get('score_home');
-        const score_away = formData.get('score_away');
+        const score_home_data = formData.get('score_home');
+        const home_name = formData.get('home_name');
+        const away_name = formData.get('away_name');
+        const score_away_data = formData.get('score_away');
         const matchup_outcome = formData.get('selected_team');
-    
+
         if (
             typeof matchup_id !== 'string' ||
-            typeof selected_team !== 'string' ||
             typeof score_home !== 'string' ||
             typeof score_away !== 'string'
         ) {
@@ -111,9 +111,34 @@ export const actions: Actions = {
             return { error: 'Invalid score data' };
         }
 
+        if(Number(score_home) < 0 || Number(score_away) < 0) {
+            return { error: 'No negative numbers' };
+        }
+
         if(matchup_outcome === "tie" && score_home != score_away) {
             return { error: 'Invalid tie score data' };
         }
+        else if(matchup_outcome === "home_win" && score_home <= score_away) {
+            return { error: 'Invalid home win score data' };
+        }
+        else if (matchup_outcome === "away_win" && score_home >= score_away) {
+            return { error: 'Invalid away win score data' };
+        }
+
+        let selected_team
+        switch (matchup_outcome) {
+            case "home_win":
+                selected_team = home_name;
+                break;
+            case "away_win":
+                selected_team = away_name;
+                break;
+            default:
+                break;   
+        }
+
+        const score_home = score_home_data;
+        const score_away = score_away_data;
     
         const point_difference = Math.abs(parseInt(score_home, 10) - parseInt(score_away, 10));
     
@@ -123,6 +148,7 @@ export const actions: Actions = {
                 {
                     user_id: user?.id,
                     tournament_id: params.id,
+                    selected_team,
                     matchup_id,
                     matchup_outcome,
                     score_home: parseInt(score_home, 10),

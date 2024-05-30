@@ -288,7 +288,7 @@
 			<form use:enhance method="post" action="?/makePrediction">
 				<input type="hidden" name="matchup_id" value={matchup.id} />
 				<div>
-					<label>Pasirink komandą:</label>
+					<label>Kas laimės?:</label>
 					<div>
 						<input
 							type="radio"
@@ -309,15 +309,24 @@
 						/>
 						<label for="team_away_{matchup.id}">{matchup.team_away}</label>
 					</div>
+					<div>
+						<input
+							type="radio"
+							id="tie_{matchup.id}"
+							name="selected_team"
+							value="Lygiosios"
+							required
+						/>
+						<label for="team_away_{matchup.id}">Lygiosios</label>
+					</div>
 				</div>
 				<div>
-					<label for="point_difference_{matchup.id}">Taškų skirtumas:</label>
-					<input
-						type="number"
-						id="point_difference_{matchup.id}"
-						name="point_difference"
-						required
-					/>
+					<label for="score_away_{matchup.id}">{matchup.team_home} taškai:</label>
+					<input type="number" id="score_home_{matchup.id}" name="score_home" required />
+				</div>
+				<div>
+					<label for="score_away_{matchup.id}">{matchup.team_away} taškai:</label>
+					<input type="number" id="score_away_{matchup.id}" name="score_away" required />
 				</div>
 				<button type="submit">Pateikti spėjimą</button>
 			</form>

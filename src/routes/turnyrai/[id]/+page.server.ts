@@ -22,7 +22,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
     const { data: matchups } = await supabase
     .from('matchups')
-    .select('team_home, team_away, id, predictions_open, status, score_home, score_away')
+    .select('team_home, team_away, id, predictions_open, status, score_home, score_away, created_at')
     .eq('tournament_id', params.id)
 
 
@@ -160,7 +160,8 @@ export const actions: Actions = {
 			score_away: matchup.score_away,
 			status: matchup.status,
 			team_home: matchup.team_home, // Make sure to include team_home
-			team_away: matchup.team_away // Make sure to include team_away
+			team_away: matchup.team_away, // Make sure to include team_away
+            predictions_open: matchup.status === "open"
 		}));
 
 		const { data, error } = await supabase

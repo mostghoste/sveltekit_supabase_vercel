@@ -30,6 +30,7 @@
 	});
 
 	let selectedMatchups = [];
+	let loading = false;
 
 	function toggleMatchupSelection(id: number) {
 		if (selectedMatchups.includes(id)) {
@@ -50,10 +51,70 @@
 		allSelected = !allSelected;
 	}
 
-	function updateScore(matchupId: number, field: string, value: number) {
+	function updateField(matchupId: number, field: string, value: any) {
 		const matchup = matchups.find((m) => m.id === matchupId);
 		if (matchup) {
 			matchup[field] = value;
+		}
+		matchups?.sort((a, b) => {
+			a.created_at - b.created_at;
+		});
+	}
+
+	function validateForm() {
+		console.log('starting validation');
+		let valid = true;
+		matchups?.forEach((matchup) => {
+			if (matchup.status === 'done') {
+				if (matchup.score_home !== null && matchup.score_away !== null) {
+					valid;
+				} else {
+					alert(JSON.stringify(matchup));
+					return false;
+				}
+			}
+		});
+		return valid;
+	}
+
+	let successSaving = false;
+	let savingError = false;
+
+	function showloader(millisec) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve('');
+			}, millisec);
+		});
+	}
+
+	async function handleSubmit(event: Event) {
+		successSaving = false;
+		loading = true;
+		event.preventDefault();
+		const validate = validateForm();
+		console.log(`Form validation: ${validate}`);
+		if (!validate) {
+			loading = false;
+			savingError = true;
+			return;
+		}
+		const form = event.target as HTMLFormElement;
+		const formData = new FormData(form);
+		const response = await fetch(form.action, {
+			method: form.method,
+			body: formData
+		});
+		const result = await response.json();
+		await showloader(500);
+		loading = false;
+		if (result.error) {
+			alert('Error: ' + result.error);
+		} else {
+			successSaving = true;
+			setTimeout(() => {
+				successSaving = false;
+			}, 2000);
 		}
 	}
 </script>
@@ -112,7 +173,9 @@
 							<td class="center">
 								<select
 									bind:value={matchup.status}
-									on:change={(e) => updateField(matchup.id, 'status', e.target.value)}
+									on:change={(e) => {
+										updateField(matchup.id, 'status', e.target.value);
+									}}
 								>
 									<option value="open">open</option>
 									<option value="closed">closed</option>
@@ -145,7 +208,7 @@
 				{/if}
 			</tbody>
 		</table>
-		<form use:enhance method="post" action="?/closePredictions">
+		<form use:enhance method="post" action="?/editMatchups" on:submit={handleSubmit}>
 			<input
 				type="hidden"
 				name="matchups"
@@ -163,14 +226,20 @@
 					})
 				)}
 			/>
-			<input type="hidden" name="selected_matchups" value={JSON.stringify(selectedMatchups)} />
-			<button type="submit" formaction="?/openPredictions" disabled={selectedMatchups.length <= 0}
-				>Atidaryti spėjimus</button
-			>
-			<button type="submit" disabled={selectedMatchups.length <= 0}>Uždaryti spėjimus</button>
-			<button type="submit" formaction="?/editMatchups" disabled={selectedMatchups.length <= 0}
-				>Išsaugoti spėjimus</button
-			>
+			<button
+				style="width: 4rem; height: fit-content;"
+				type="submit"
+				disabled={selectedMatchups.length <= 0}
+				>{#if loading}
+					<p>⏳</p>
+				{:else if successSaving}
+					<p>✅</p>
+				{:else if savingError}
+					❌
+				{:else}
+					<p>💾</p>
+				{/if}
+			</button>
 		</form>
 	</div>
 {/if}

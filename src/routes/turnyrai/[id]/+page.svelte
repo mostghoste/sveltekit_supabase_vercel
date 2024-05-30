@@ -72,6 +72,7 @@
 					<th>Komanda 1</th>
 					<th>Komanda 2</th>
 					<th>Spėjimai</th>
+					<th>Varžybų statusas</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -88,6 +89,7 @@
 							<td>{matchup.team_home}</td>
 							<td>{matchup.team_away}</td>
 							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
+							<td>{matchup.status}</td>
 						</tr>
 					{/each}
 				{/if}

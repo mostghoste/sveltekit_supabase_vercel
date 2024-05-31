@@ -156,6 +156,10 @@
 				<label for="team_away">Komanda 2:</label>
 				<input type="text" id="team_away" name="team_away" required />
 			</div>
+			<div>
+				<label for="group">Grupė (optional):</label>
+				<input type="text" name="group" id="group" placeholder="Grupė A" />
+			</div>
 			<button type="submit">Pridėti</button>
 		</form>
 
@@ -166,6 +170,7 @@
 					<th><button on:click={toggleAllMatchups}>✅</button></th>
 					<th>Komanda 1</th>
 					<th>Komanda 2</th>
+					<th>Grupė</th>
 					<th>Spėjimai</th>
 					<th>Statusas</th>
 					<th>1 taškai</th>
@@ -185,6 +190,7 @@
 							</td>
 							<td>{matchup.team_home}</td>
 							<td>{matchup.team_away}</td>
+							<td>{matchup.group_id || ''}</td>
 							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
 							<td class="center">
 								<select

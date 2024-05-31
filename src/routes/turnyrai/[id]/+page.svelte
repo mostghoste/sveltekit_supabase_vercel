@@ -176,7 +176,12 @@
 			{#if groups}
 				<div class="groupContainer">
 					{#each groups as group}
-						<button on:click={handleGroupChange(group.name)} type="button">{group.name}</button>
+						<button
+							on:click={() => {
+								handleGroupChange(group.name);
+							}}
+							type="button">{group.name}</button
+						>
 					{/each}
 				</div>
 			{/if}
@@ -210,7 +215,7 @@
 							</td>
 							<td>{matchup.team_home}</td>
 							<td>{matchup.team_away}</td>
-							<td>{matchup.group_id || ''}</td>
+							<td>{matchup.group_id.name || ''}</td>
 							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
 							<td class="center">
 								<select

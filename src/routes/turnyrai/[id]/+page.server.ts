@@ -28,7 +28,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
     const { data: matchup_predictions } = await supabase
     .from('matchup_predictions')
-    .select('matchup_id, selected_team, point_difference')
+    .select('matchup_id, matchup_outcome, score_home, score_away')
     .eq("user_id", user?.id)
     .eq('tournament_id', params.id)
 
@@ -128,7 +128,8 @@ export const actions: Actions = {
         const away_name = formData.get('away_name');
         const score_away_data = formData.get('score_away');
         const matchup_outcome = formData.get('selected_team');
-
+        const score_home = score_home_data;
+        const score_away = score_away_data;
         if (
             typeof matchup_id !== 'string' ||
             typeof score_home !== 'string' ||
@@ -167,8 +168,7 @@ export const actions: Actions = {
                 break;   
         }
 
-        const score_home = score_home_data;
-        const score_away = score_away_data;
+        
     
         const point_difference = Math.abs(parseInt(score_home, 10) - parseInt(score_away, 10));
     

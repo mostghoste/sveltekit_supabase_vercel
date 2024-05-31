@@ -313,7 +313,8 @@
 
 {#if tournament_participant}
 	<h2>Mano spėjimai</h2>
-	<h3>Dar neatlikti spėjimai</h3>
+	<h3>Dar neatlikti spėjimai ({unpredictedMatchups.length})</h3>
+	<h4></h4>
 	{#if unpredictedMatchups && unpredictedMatchups.length > 0}
 		{#each unpredictedMatchups as matchup}
 			<form use:enhance method="post" action="?/makePrediction">
@@ -365,7 +366,7 @@
 
 	<h3>Patvirtinti spėjimai</h3>
 	{#if joinedPredictions && joinedPredictions.length > 0}
-		<ul>
+		<!-- <ul>
 			{#each joinedPredictions as prediction}
 				<li>
 					<p>{prediction.team_home} - {prediction.team_away}</p>
@@ -374,7 +375,28 @@
 					</p>
 				</li>
 			{/each}
-		</ul>
+		</ul> -->
+		<table>
+			<tr>
+				<th> Varžybos </th>
+				<th>Spėjimas</th>
+				<th>Rezultatas</th>
+				<th>Statusas</th>
+				<th>Taškai</th>
+			</tr>
+			{#each joinedPredictions as prediction}
+				<tr>
+					<td>{prediction.team_home} - {prediction.team_away}</td>
+					<td
+						>{prediction.matchup_outcome === 'tie'
+							? 'Lygiosios'
+							: prediction.matchup_outcome === 'home_win'
+								? prediction.team_home
+								: prediction.team_away}</td
+					>
+				</tr>
+			{/each}
+		</table>
 	{:else}
 		<p>Dar neatlikai jokių spėjimų</p>
 	{/if}

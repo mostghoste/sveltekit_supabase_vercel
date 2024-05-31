@@ -10,7 +10,8 @@
 		profile,
 		tournament_participant,
 		matchup_predictions,
-		tournament_participants
+		tournament_participants,
+		groups
 	} = data);
 
 	let unpredictedMatchups = [];
@@ -133,6 +134,12 @@
 			}, 2000);
 		}
 	}
+
+	$: selectedGroup = '';
+
+	$: handleGroupChange = (groupName: string) => {
+		selectedGroup = groupName;
+	};
 </script>
 
 <h2>Turnyras</h2>
@@ -158,8 +165,21 @@
 			</div>
 			<div>
 				<label for="group">Grupė (optional):</label>
-				<input type="text" name="group" id="group" placeholder="Grupė A" />
+				<input
+					bind:value={selectedGroup}
+					type="text"
+					name="group"
+					id="group"
+					placeholder="Nauja grupė"
+				/>
 			</div>
+			{#if groups}
+				<div class="groupContainer">
+					{#each groups as group}
+						<button on:click={handleGroupChange(group.name)} type="button">{group.name}</button>
+					{/each}
+				</div>
+			{/if}
 			<button type="submit">Pridėti</button>
 		</form>
 
@@ -411,5 +431,10 @@
 		bottom: 7rem;
 		right: 2rem;
 		max-width: 16rem;
+	}
+
+	.groupContainer {
+		display: flex;
+		gap: 0.4rem;
 	}
 </style>

@@ -37,6 +37,13 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
     .select('user_id, points')
     .eq('tournament_id', params.id)
 
+
+    const { data: groups } = await supabase
+    .from('groups')
+    .select('*')
+    .eq("tournament_id", params.id)
+
+
     const {data: profiles} = await supabase.from('profiles').select("username, id")
 
     const leaderboardData = tournament_participants?.map(participant => {
@@ -46,7 +53,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
     leaderboardData?.sort((a, b) => b.points - a.points);
 
-    return {tournament: tournament[0], tournament_participant: tournament_participant[0], matchups, matchup_predictions, tournament_participants: leaderboardData};
+    return {tournament: tournament[0], tournament_participant: tournament_participant[0], matchups, matchup_predictions, tournament_participants: leaderboardData, groups};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
@@ -68,28 +75,51 @@ export const actions: Actions = {
       return { success: true, tournament: data };
     },
     addMatchup: async ({ request, params, locals: { supabase } }) => {
-      const formData = await request.formData();
-      const team_home = formData.get('team_home');
-      const team_away = formData.get('team_away');
-
-      if (typeof team_home !== 'string' || typeof team_away !== 'string') {
-          return { error: 'Invalid matchup data' };
-      }
-
-      const { data, error } = await supabase
-          .from('matchups')
-          .insert([
-              { team_home, team_away, tournament_id: params.id }
-          ])
-          .select();
-
-      if (error) {
-          console.error("Error inserting matchup:", error);
-          return { error: 'Error inserting matchup' };
-      }
-
-      return { success: true, matchup: data };
-    },
+        const formData = await request.formData();
+        const team_home = formData.get('team_home');
+        const team_away = formData.get('team_away');
+        const group = formData.get('group');
+    
+        if (typeof team_home !== 'string' || typeof team_away !== 'string') {
+            return { error: 'Invalid matchup data' };
+        }
+    
+        console.log(group);
+    
+        let group_id = null;
+        if (group !== "") {
+            console.log("Inserting");
+            const { data: groupData, error: groupError } = await supabase
+                .from('groups')
+                .insert([{ name: group, tournament_id:params.id }])
+                .select();
+    
+            if (groupError) {
+                console.error("Error inserting group:", groupError);
+                return { error: 'Error inserting group' };
+            }
+    
+            console.log(groupData, groupError);
+    
+            if (groupData && groupData.length > 0) {
+                group_id = groupData[0].id;
+            }
+        }
+    
+        const { data, error } = await supabase
+            .from('matchups')
+            .insert([
+                { team_home, team_away, tournament_id: params.id, group_id }
+            ])
+            .select();
+    
+        if (error) {
+            console.error("Error inserting matchup:", error);
+            return { error: 'Error inserting matchup' };
+        }
+    
+        return { success: true, matchup: data };
+    },    
     makePrediction: async ({ request, params, locals: { supabase, user } }) => {
         const formData = await request.formData();
         const matchup_id = formData.get('matchup_id');

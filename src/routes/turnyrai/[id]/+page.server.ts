@@ -241,31 +241,97 @@ export const actions: Actions = {
 
 		return { success: true, matchups: data };
 	},
-	editMatchups: async ({ request, params, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const matchups = JSON.parse(formData.get('matchups') as string);
+    editMatchups: async ({ request, params, locals: { supabase } }) => {
+        console.log("Updating points")
 
-		const updates = matchups.map((matchup: { id: string; score_home: number; score_away: number; status: string }) => ({
-			id: matchup.id,
-			score_home: matchup.score_home,
-			score_away: matchup.score_away,
-			status: matchup.status,
-			team_home: matchup.team_home, // Make sure to include team_home
-			team_away: matchup.team_away, // Make sure to include team_away
-            predictions_open: matchup.status === "open"
-		}));
+        const calculatePoints = (matchup, prediction): number => {
 
-		const { data, error } = await supabase
-			.from('matchups')
-			.upsert(updates)
-			.eq('tournament_id', params.id)
-			.select();
+            return 0;
+        }
 
-		if (error) {
-			console.error('Error updating matchups:', error);
-			return { error: 'Error updating matchups' };
-		}
+        try {
+            const formData = await request.formData();
+            const matchups = JSON.parse(formData.get('matchups') as string);
 
-		return { success: true, matchups: data };
-	}
+
+            const { data: matchup_predictions, error: matchup_error } = await supabase
+            .from('matchup_predictions')
+            .select('*')
+            .eq("tournament_id", params.id)
+
+            // console.log(matchup_predictions);
+
+            if (!matchup_predictions) {
+                return
+            }
+    
+            const updates = await Promise.all(matchups.map(async (matchup) => {
+                // Handle changing the status of all matchup_predictions
+                const status = matchup.status;
+                const predictions = matchup_predictions.filter(pred => pred.matchup_id === matchup.id);
+
+                // console.log("Preds:" + JSON.stringify(predictions))
+
+                let points = null
+                if (status === "open") {
+                    points = null;
+                } else if (status === "")
+    
+                if (status === "closed") {
+                    points = null;
+                }
+
+                if (status === "done") {
+                    console.log(`\nPredictions for match: ${matchup.team_home} - ${matchup.team_away}`)
+                    predictions.map((pred) => {
+                        console.log(`${pred.id}: ${pred.matchup_outcome}`)
+                    })
+                    // points = calculatePoints(matchup, matchup_predictions);
+                }
+
+                if (status === "cancelled") {
+                    points = null;
+                }
+
+                const { data: predictionData, error: predictionError } = await supabase
+                .from('matchup_predictions')
+                .update({ prediction_status: status, points: points })
+                .eq('tournament_id', params.id)
+                .eq('matchup_id', matchup.id)
+                .select();
+
+                if (predictionError) {
+                    console.error('Error updating matchup_predictions:', predictionError);
+                    throw predictionError;
+                }
+    
+                return {
+                    id: matchup.id,
+                    score_home: matchup.score_home,
+                    score_away: matchup.score_away,
+                    status: matchup.status,
+                    team_home: matchup.team_home, // Make sure to include team_home
+                    team_away: matchup.team_away, // Make sure to include team_away
+                    predictions_open: matchup.status === "open"
+                };
+            }));
+    
+            const { data, error } = await supabase
+                .from('matchups')
+                .upsert(updates)
+                .eq('tournament_id', params.id)
+                .select();
+    
+            if (error) {
+                console.error('Error updating matchups:', error);
+                return { error: 'Error updating matchups' };
+            }
+    
+            return { success: true, matchups: data };
+        } catch (error) {
+            console.error('Error in editMatchups function:', error);
+            return { error: 'Error processing matchups' };
+        }
+    }
+    
   };

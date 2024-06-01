@@ -215,7 +215,7 @@
 							</td>
 							<td>{matchup.team_home}</td>
 							<td>{matchup.team_away}</td>
-							<td>{matchup.group_id.name || ''}</td>
+							<td>{matchup.group_id ? matchup.group_id.name : ''}</td>
 							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
 							<td class="center">
 								<select
@@ -394,6 +394,9 @@
 								? prediction.team_home
 								: prediction.team_away}</td
 					>
+					<td>
+						{prediction.score_home} : {prediction.score_away}
+					</td>
 				</tr>
 			{/each}
 		</table>

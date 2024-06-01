@@ -122,18 +122,17 @@ export const actions: Actions = {
     },    
     makePrediction: async ({ request, params, locals: { supabase, user } }) => {
         const formData = await request.formData();
+        console.log(JSON.stringify(formData))
         const matchup_id = formData.get('matchup_id');
         const score_home_data = formData.get('score_home');
         const home_name = formData.get('home_name');
         const away_name = formData.get('away_name');
         const score_away_data = formData.get('score_away');
         const matchup_outcome = formData.get('selected_team');
-        const score_home = score_home_data;
-        const score_away = score_away_data;
+        let score_home = score_home_data;
+        let score_away = score_away_data;
         if (
-            typeof matchup_id !== 'string' ||
-            typeof score_home !== 'string' ||
-            typeof score_away !== 'string'
+            typeof matchup_id !== 'string' 
         ) {
             return { error: 'Invalid prediction data' };
         }
@@ -146,13 +145,13 @@ export const actions: Actions = {
             return { error: 'No negative numbers' };
         }
 
-        if(matchup_outcome === "tie" && score_home != score_away) {
+        if(matchup_outcome === "tie" && score_away_data != score_home_data) {
             return { error: 'Invalid tie score data' };
         }
-        else if(matchup_outcome === "home_win" && score_home <= score_away) {
+        else if(matchup_outcome === "home_win" && Number(score_home_data) <= Number(score_away_data)) {
             return { error: 'Invalid home win score data' };
         }
-        else if (matchup_outcome === "away_win" && score_home >= score_away) {
+        else if (matchup_outcome === "away_win" && Number(score_home_data) >= Number(score_away_data)) {
             return { error: 'Invalid away win score data' };
         }
 
@@ -160,15 +159,24 @@ export const actions: Actions = {
         switch (matchup_outcome) {
             case "home_win":
                 selected_team = home_name;
+                score_home = "1"
+                score_away = "0"
                 break;
             case "away_win":
                 selected_team = away_name;
+                score_home = "0"
+                score_away = "1"
                 break;
             default:
+                score_home = "0"
+                score_away = "0"
                 break;   
         }
 
-        
+        if (score_home_data !== "" && score_away_data !== "") {
+            score_home = score_home_data;
+            score_away = score_away_data;
+        }
     
         const point_difference = Math.abs(parseInt(score_home, 10) - parseInt(score_away, 10));
     

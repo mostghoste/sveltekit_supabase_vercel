@@ -398,6 +398,7 @@
 						{prediction.score_home} : {prediction.score_away}
 					</td>
 					<td>{prediction.prediction_status}</td>
+					<td>{prediction.points ? `+${prediction.points}` : ''}</td>
 				</tr>
 				<!-- <p>{JSON.stringify(prediction)}</p> -->
 			{/each}

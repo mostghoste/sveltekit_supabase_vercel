@@ -28,7 +28,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
     const { data: matchup_predictions } = await supabase
     .from('matchup_predictions')
-    .select('matchup_id, matchup_outcome, score_home, score_away')
+    .select('matchup_id, matchup_outcome, score_home, score_away, prediction_status')
     .eq("user_id", user?.id)
     .eq('tournament_id', params.id)
 
@@ -122,7 +122,6 @@ export const actions: Actions = {
     },    
     makePrediction: async ({ request, params, locals: { supabase, user } }) => {
         const formData = await request.formData();
-        console.log(JSON.stringify(formData))
         const matchup_id = formData.get('matchup_id');
         const score_home_data = formData.get('score_home');
         const home_name = formData.get('home_name');
@@ -131,6 +130,7 @@ export const actions: Actions = {
         const matchup_outcome = formData.get('selected_team');
         let score_home = score_home_data;
         let score_away = score_away_data;
+
         if (
             typeof matchup_id !== 'string' 
         ) {
@@ -143,16 +143,6 @@ export const actions: Actions = {
 
         if(Number(score_home) < 0 || Number(score_away) < 0) {
             return { error: 'No negative numbers' };
-        }
-
-        if(matchup_outcome === "tie" && score_away_data != score_home_data) {
-            return { error: 'Invalid tie score data' };
-        }
-        else if(matchup_outcome === "home_win" && Number(score_home_data) <= Number(score_away_data)) {
-            return { error: 'Invalid home win score data' };
-        }
-        else if (matchup_outcome === "away_win" && Number(score_home_data) >= Number(score_away_data)) {
-            return { error: 'Invalid away win score data' };
         }
 
         let selected_team
@@ -173,9 +163,20 @@ export const actions: Actions = {
                 break;   
         }
 
+
         if (score_home_data !== "" && score_away_data !== "") {
             score_home = score_home_data;
             score_away = score_away_data;
+        }
+
+        if(matchup_outcome === "tie" && score_home != score_away) {
+            return { error: 'Invalid tie score data' };
+        }
+        else if(matchup_outcome === "home_win" && Number(score_home) <= Number(score_away)) {
+            return { error: 'Invalid home win score data' };
+        }
+        else if (matchup_outcome === "away_win" && Number(score_home) >= Number(score_away)) {
+            return { error: 'Invalid away win score data' };
         }
     
         const point_difference = Math.abs(parseInt(score_home, 10) - parseInt(score_away, 10));

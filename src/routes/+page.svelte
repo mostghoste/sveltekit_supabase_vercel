@@ -4,6 +4,23 @@
 </script>
 
 <h1>👀 Stebėtojas</h1>
+<h2 class="font-normal mt-0">
+	Sveikinu atvykus į smagiausią <span class="font-bold">EURO2024</span> totalizatorių
+</h2>
+<div class="flex flex-col text-lg text-black mb-8">
+	<div class="flex gap-2 items-center justify-center">
+		<span>🎯</span>
+		<p>Spėk rezultatus</p>
+	</div>
+	<div class="flex gap-2 items-center justify-center">
+		<span>👀</span>
+		<p>Stebėk turnyrinę lentelę</p>
+	</div>
+	<div class="flex gap-2 items-center justify-center">
+		<span>🏆</span>
+		<p>Laimėk neišblėstančią garbę</p>
+	</div>
+</div>
 {#if user}
 	{#if !profile?.username}
 		<div>

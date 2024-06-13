@@ -1,13 +1,46 @@
 <script lang="ts">
 	import PredictionCard from './PredictionCard.svelte';
 
-	let unpredictedMatchups = [];
+	type matchup = {
+		home_team: string;
+		away_team: string;
+	};
+
+	export let unpredictedMatchups: matchup[] = [];
+	let currentlySelectedMatchup = 0;
 </script>
 
-<p>Atlikti spėjimai: 0/12</p>
-<PredictionCard></PredictionCard>
+{#if unpredictedMatchups && unpredictedMatchups.length > 0}
+	<section class="flex flex-col gap-2 mb-4">
+		<header class="flex items-cente justify-between">
+			<span class="font-bold">Dar neatlikti spėjimai</span>
+			<span>{currentlySelectedMatchup + 1}/{unpredictedMatchups.length}</span>
+		</header>
+		<PredictionCard matchup={unpredictedMatchups[currentlySelectedMatchup]}></PredictionCard>
+		<footer class="flex gap-2">
+			<button
+				on:click={() => {
+					if (currentlySelectedMatchup > 0) {
+						currentlySelectedMatchup = currentlySelectedMatchup - 1;
+					}
+				}}
+				class="btn btn-secondary"
+				type="submit">prev</button
+			>
+			<button
+				on:click={() => {
+					if (currentlySelectedMatchup + 1 < unpredictedMatchups.length) {
+						currentlySelectedMatchup = currentlySelectedMatchup + 1;
+					}
+				}}
+				class="btn btn-primary"
+				type="submit">next</button
+			>
+		</footer>
+	</section>
+{/if}
 
-<h2>Mano spėjimai</h2>
+<!-- <h2>Mano spėjimai</h2>
 <h3>Dar neatlikti spėjimai ({unpredictedMatchups.length})</h3>
 {#if unpredictedMatchups && unpredictedMatchups.length > 0}
 	{#each unpredictedMatchups as matchup}
@@ -56,4 +89,4 @@
 	{/each}
 {:else}
 	<p>Visi galimi spėjimai atlikti</p>
-{/if}
+{/if} -->

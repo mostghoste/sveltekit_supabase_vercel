@@ -40,7 +40,7 @@
 				{/if}
 			</div>
 			<nav class="w-fit">
-				<div class="dropdown">
+				<div class="dropdown dropdown-end">
 					<div tabindex="0" role="button" class="btn">
 						Tema
 						<svg

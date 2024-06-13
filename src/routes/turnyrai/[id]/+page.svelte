@@ -2,6 +2,8 @@
 	import { enhance } from '$app/forms';
 	import AdminPanel from './AdminPanel.svelte';
 	import type { PageData } from './$types';
+	import PredictionCard from './PredictionCard.svelte';
+	import Predictions from './Predictions.svelte';
 
 	export let data: PageData;
 	$: ({
@@ -50,6 +52,8 @@
 
 {#if tournament_participant}
 	<p class="text-sm">Tu šiame turnyre <strong>dalyvauji</strong></p>
+
+	<Predictions></Predictions>
 {:else}
 	<p class="text-sm mt-2 mb-1">Tu šiame turnyre dar <strong>nedalyvauji</strong></p>
 	<h3 class="text-left">Dalyvaudamas turnyre įsipareigoji:</h3>

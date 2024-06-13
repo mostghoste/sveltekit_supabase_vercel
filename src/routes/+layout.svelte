@@ -19,7 +19,7 @@
 
 <div class="flex justify-center items-center h-screen">
 	<main
-		class="artboard phone-4 flex items-center flex-col text-center rounded-md md:border lg:border p-2"
+		class="artboard phone-4 flex items-center flex-col text-center rounded-box md:border lg:border p-2"
 	>
 		<header class="w-full flex justify-end">
 			<nav class="w-fit">
@@ -85,7 +85,7 @@
 				</div>
 			</nav>
 		</header>
-		<section class="flex-grow flex justify-center flex-col">
+		<section class="flex-grow flex justify-center flex-col prose">
 			<slot></slot>
 		</section>
 		<footer class="text-xs text-gray-600"><p>@mostghoste 2024</p></footer>

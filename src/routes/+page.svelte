@@ -11,7 +11,7 @@
 	};
 </script>
 
-<h1 class="font-bold text-2xl">👀 Stebėtojas</h1>
+<h1>👀 Stebėtojas</h1>
 {#if user}
 	<p>Tu prisijungęs kaip: {user.email}</p>
 	<button class="btn btn-primary" on:click={logout}>Atsijungti</button>

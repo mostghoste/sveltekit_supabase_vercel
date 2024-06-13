@@ -5,21 +5,29 @@
 	$: ({ tournaments, user, profile, supabase } = data);
 </script>
 
-<h2>Turnyrai</h2>
-{#if tournaments}
-	<p>Turnyrų skaičius: {tournaments.length}</p>
-	<ul>
-		{#each tournaments as tournament}
-			<li><a href={`/turnyrai/${tournament.id}`}>{tournament.name}</a></li>
-		{/each}
-	</ul>
-{:else}
-	<p>Turnyrų nerasta</p>
-{/if}
-
+<h1>🏅 Turnyrai</h1>
 {#if profile?.admin}
-	<form method="post" action="?/addTournament">
-		<input type="text" placeholder="Turnyro pavadinimas" name="name" required />
-		<button type="submit">Pridėti</button>
-	</form>
+	<div class="bg-warning p-4 rounded-box flex flex-col gap-2 w-full">
+		<span class="font-black">❗Admino įrankiai❗</span>
+		<form method="post" action="?/addTournament" class="flex gap-2">
+			<input
+				class="input input-bordered w-full"
+				type="text"
+				placeholder="Turnyro pavadinimas"
+				name="name"
+				required
+			/>
+			<button class="btn btn-primary" type="submit">Pridėti</button>
+		</form>
+	</div>
+{/if}
+{#if tournaments}
+	<!-- <p>Turnyrų skaičius: {tournaments.length}</p> -->
+	<section class="py-2 gap-2 flex flex-col overflow-y-scroll max-h-[33rem] min-w-[22rem]">
+		{#each tournaments as tournament}
+			<a class="btn btn-info w-full" href={`/turnyrai/${tournament.id}`}>{tournament.name}</a>
+		{/each}
+	</section>
+{:else}
+	<h2>🔎 Turnyrų nerasta</h2>
 {/if}

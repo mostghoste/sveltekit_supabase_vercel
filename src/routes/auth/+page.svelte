@@ -28,8 +28,8 @@
 		<span class="text-error text-sm">{form.passwordError}</span>
 	{/if}
 	<div class="flex gap-2 my-1 justify-end">
-		<button class="btn btn-secondary" formaction="?/signup">Registruotis</button>
 		<button class="btn btn-primary">Prisijungti</button>
+		<button class="btn btn-secondary" formaction="?/signup">Registruotis</button>
 	</div>
 	{#if form?.errorMessage}
 		<div role="alert" class="alert alert-error absolute w-80 -bottom-24">

@@ -26,6 +26,6 @@
 
 	<a href="/turnyrai">Turnyrai</a>
 {:else}
-	<p>Tu dar neprisijungęs</p>
-	<a href="/auth">Prisijungti</a>
+	<p>Tu dar neprisijungęs!</p>
+	<a class="btn btn-primary" href="/auth">Prisijungti / Registruotis</a>
 {/if}

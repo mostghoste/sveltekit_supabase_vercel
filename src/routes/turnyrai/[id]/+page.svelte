@@ -39,7 +39,7 @@
 
 <span>Turnyras</span>
 {#if tournament}
-	<h1>{tournament.name}</h1>
+	<h1 class="m-0 p-0">{tournament.name}</h1>
 {:else}
 	<p>Turnyras nerastas</p>
 {/if}
@@ -49,11 +49,17 @@
 {/if}
 
 {#if tournament_participant}
-	<p>Tu šiame turnyre <strong>dalyvauji</strong></p>
+	<p class="text-sm">Tu šiame turnyre <strong>dalyvauji</strong></p>
 {:else}
-	<p>Tu šiame turnyre <strong>nedalyvauji</strong></p>
+	<p class="text-sm mt-2 mb-1">Tu šiame turnyre dar <strong>nedalyvauji</strong></p>
+	<h3 class="text-left">Dalyvaudamas turnyre įsipareigoji:</h3>
+	<ul class="text-left m-0">
+		<li>Prabalsuoti už kiekvienų varžybų baigtį</li>
+		<li>Gauti taškus pagal tai kokie tikslūs tavo spėjimai</li>
+		<li>Turnyrinėje lentelėje pasirodyti geriau už visus kitus</li>
+	</ul>
 	<form method="post" action="?/join">
-		<button class="btn btn-success" type="submit">Prisijungti</button>
+		<button class="btn btn-success" type="submit">Dalyvauti</button>
 	</form>
 {/if}
 

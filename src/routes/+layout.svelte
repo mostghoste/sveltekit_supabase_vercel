@@ -27,7 +27,7 @@
 
 <div class="flex justify-center items-center h-screen bg-primary-content">
 	<main
-		class="artboard phone-4 flex items-center flex-col text-center rounded-box border-primary md:border lg:border p-2 bg-neutral-content"
+		class="artboard phone-4 flex items-center flex-col text-center rounded-box border-primary md:border lg:border p-2 bg-neutral-content overflow-y-scroll"
 	>
 		<header class="w-full flex justify-between items-center">
 			<div class="flex gap-2">

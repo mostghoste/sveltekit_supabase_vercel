@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import AdminPanel from './AdminPanel.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -15,7 +16,6 @@
 	} = data);
 
 	let unpredictedMatchups = [];
-
 	$: if (matchups && matchup_predictions) {
 		unpredictedMatchups = matchups.filter((matchup) => {
 			return !matchup_predictions.some((prediction) => prediction.matchup_id === matchup.id);
@@ -30,111 +30,6 @@
 		return { ...prediction, team_home: matchup?.team_home, team_away: matchup?.team_away };
 	});
 
-	let selectedMatchups = [];
-	let loading = false;
-
-	function toggleMatchupSelection(id: number) {
-		if (selectedMatchups.includes(id)) {
-			selectedMatchups = selectedMatchups.filter((matchupId) => matchupId !== id);
-		} else {
-			selectedMatchups = [...selectedMatchups, id];
-		}
-	}
-
-	let allSelected = false;
-
-	function toggleAllMatchups() {
-		if (allSelected) {
-			selectedMatchups = [];
-		} else {
-			selectedMatchups = matchups.map((matchup) => matchup.id);
-		}
-		allSelected = !allSelected;
-	}
-
-	function updateField(matchupId: number, field: string, value: any) {
-		const matchup = matchups.find((m) => m.id === matchupId);
-		if (matchup) {
-			matchup[field] = value;
-		}
-		matchups?.sort((a, b) => {
-			a.created_at - b.created_at;
-		});
-	}
-
-	function validateForm() {
-		console.log('starting validation');
-		let valid = true;
-		matchups?.forEach((matchup) => {
-			if (matchup.status === 'done') {
-				if (matchup.score_home !== null && matchup.score_away !== null) {
-					valid;
-				} else {
-					errorMessage = 'done varzybos privalo tureti taskus';
-					return false;
-				}
-			}
-
-			if (
-				matchup.status === 'open' ||
-				matchup.status === 'closed' ||
-				matchup.status === 'cancelled'
-			) {
-				if (
-					(matchup.score_home === null && matchup.score_away !== null) ||
-					(matchup.score_home !== null && matchup.score_away === null)
-				) {
-					errorMessage = 'taskus turi tureti arba abi komandos, arba nei viena';
-					return false;
-				}
-			}
-		});
-		return valid;
-	}
-
-	let successSaving = false;
-	let savingError = false;
-	let errorMessage = '';
-
-	function showloader(millisec) {
-		return new Promise((resolve) => {
-			setTimeout(() => {
-				resolve('');
-			}, millisec);
-		});
-	}
-
-	async function handleSubmit(event: Event) {
-		successSaving = false;
-		loading = true;
-		errorMessage = '';
-		event.preventDefault();
-		const validate = validateForm();
-		console.log(`Form validation: ${validate}`);
-		if (!validate) {
-			loading = false;
-			savingError = true;
-			return;
-		}
-		const form = event.target as HTMLFormElement;
-		const formData = new FormData(form);
-		const response = await fetch(form.action, {
-			method: form.method,
-			body: formData
-		});
-		const result = await response.json();
-		await showloader(500);
-		loading = false;
-		if (result.error) {
-			alert('Error: ' + result.error);
-		} else {
-			successSaving = true;
-			setTimeout(() => {
-				successSaving = false;
-			}, 2000);
-		}
-	}
-
 	$: selectedGroup = '';
 
 	$: handleGroupChange = (groupName: string) => {
@@ -142,7 +37,7 @@
 	};
 </script>
 
-<h2>Turnyras</h2>
+<span>Turnyras</span>
 {#if tournament}
 	<h1>{tournament.name}</h1>
 {:else}
@@ -150,141 +45,7 @@
 {/if}
 
 {#if profile?.admin}
-	<div style="border: 1px solid black">
-		<h2>Admino panelė</h2>
-
-		<h3>Pridėti varžybas</h3>
-		<form use:enhance method="post" action="?/addMatchup">
-			<div>
-				<label for="team_home">Komanda 1:</label>
-				<input type="text" id="team_home" name="team_home" required />
-			</div>
-			<div>
-				<label for="team_away">Komanda 2:</label>
-				<input type="text" id="team_away" name="team_away" required />
-			</div>
-			<div>
-				<label for="group">Grupė (optional):</label>
-				<input
-					bind:value={selectedGroup}
-					type="text"
-					name="group"
-					id="group"
-					placeholder="Nauja grupė"
-				/>
-			</div>
-			{#if groups}
-				<div class="groupContainer">
-					{#each groups as group}
-						<button
-							on:click={() => {
-								handleGroupChange(group.name);
-							}}
-							type="button">{group.name}</button
-						>
-					{/each}
-				</div>
-			{/if}
-			<button type="submit">Pridėti</button>
-		</form>
-
-		<h3>Valdyti varžybas</h3>
-		<table>
-			<thead>
-				<tr>
-					<th><button on:click={toggleAllMatchups}>✅</button></th>
-					<th>Komanda 1</th>
-					<th>Komanda 2</th>
-					<th>Grupė</th>
-					<th>Spėjimai</th>
-					<th>Statusas</th>
-					<th>1 taškai</th>
-					<th>2 taškai</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#if matchups}
-					{#each matchups as matchup}
-						<tr>
-							<td>
-								<input
-									type="checkbox"
-									checked={selectedMatchups.includes(matchup.id)}
-									on:change={() => toggleMatchupSelection(matchup.id)}
-								/>
-							</td>
-							<td>{matchup.team_home}</td>
-							<td>{matchup.team_away}</td>
-							<td>{matchup.group_id ? matchup.group_id.name : ''}</td>
-							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
-							<td class="center">
-								<select
-									bind:value={matchup.status}
-									on:change={(e) => {
-										updateField(matchup.id, 'status', e.target.value);
-									}}
-								>
-									<option value="open">open</option>
-									<option value="closed">closed</option>
-									<option value="done">done</option>
-									<option value="cancelled">cancelled</option>
-								</select>
-							</td>
-							<td>
-								<input
-									class="score"
-									type="number"
-									name="home_score"
-									placeholder={matchup.score_home || '-'}
-									bind:value={matchup.score_home}
-									on:input={(e) => updateScore(matchup.id, 'score_home', e.target.value)}
-								/>
-							</td>
-							<td>
-								<input
-									class="score"
-									type="number"
-									name="away_score"
-									placeholder={matchup.score_away || '-'}
-									bind:value={matchup.score_away}
-									on:input={(e) => updateScore(matchup.id, 'score_away', e.target.value)}
-								/>
-							</td>
-						</tr>
-					{/each}
-				{/if}
-			</tbody>
-		</table>
-		<form use:enhance method="post" action="?/editMatchups" on:submit={handleSubmit}>
-			<input
-				type="hidden"
-				name="matchups"
-				value={JSON.stringify(
-					selectedMatchups.map((id) => {
-						const matchup = matchups.find((matchup) => matchup.id === id);
-						return {
-							id: matchup.id,
-							score_home: matchup.score_home,
-							score_away: matchup.score_away,
-							status: matchup.status,
-							team_home: matchup.team_home,
-							team_away: matchup.team_away
-						};
-					})
-				)}
-			/>
-			<button
-				style="width: 4rem; height: fit-content;"
-				type="submit"
-				disabled={selectedMatchups.length <= 0}
-				>{#if loading}
-					<p>⏳</p>
-				{:else}
-					<p>💾</p>
-				{/if}
-			</button>
-		</form>
-	</div>
+	<AdminPanel {matchups} {groups} {selectedGroup} {unpredictedMatchups} {joinedPredictions} />
 {/if}
 
 {#if tournament_participant}
@@ -292,7 +53,7 @@
 {:else}
 	<p>Tu šiame turnyre <strong>nedalyvauji</strong></p>
 	<form method="post" action="?/join">
-		<button type="submit">Prisijungti</button>
+		<button class="btn btn-success" type="submit">Prisijungti</button>
 	</form>
 {/if}
 
@@ -424,14 +185,14 @@
 	<p>Dalyvių nerasta</p>
 {/if}
 
-{#if errorMessage != ''}
+<!-- {#if errorMessage != ''}
 	<div class="clippy">
 		<p class="emoji">🤓☝️</p>
 	</div>
 	<div class="errorMessage">
 		<p>Akshually, {errorMessage}</p>
 	</div>
-{/if}
+{/if} -->
 
 <style>
 	td,

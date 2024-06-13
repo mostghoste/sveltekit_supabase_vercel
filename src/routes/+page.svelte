@@ -10,7 +10,7 @@
 <div class="flex flex-col text-lg text-black mb-8">
 	<div class="flex gap-2 items-center justify-center">
 		<span>🎯</span>
-		<p>Spėk rezultatus</p>
+		<p>Spėk varžybų rezultatus</p>
 	</div>
 	<div class="flex gap-2 items-center justify-center">
 		<span>👀</span>

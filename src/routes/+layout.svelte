@@ -17,6 +17,77 @@
 	});
 </script>
 
-<main class="flex justify-center flex-col items-center h-screen">
-	<slot />
-</main>
+<div class="flex justify-center items-center h-screen">
+	<main
+		class="artboard phone-4 flex items-center flex-col text-center rounded-md md:border lg:border p-2"
+	>
+		<header class="w-full flex justify-end">
+			<nav class="w-fit">
+				<div class="dropdown">
+					<div tabindex="0" role="button" class="btn">
+						Tema
+						<svg
+							width="12px"
+							height="12px"
+							class="h-2 w-2 fill-current opacity-60 inline-block"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 2048 2048"
+							><path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path></svg
+						>
+					</div>
+					<ul class="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52">
+						<li>
+							<input
+								type="radio"
+								name="theme-dropdown"
+								class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+								aria-label="Default"
+								value="default"
+							/>
+						</li>
+						<li>
+							<input
+								type="radio"
+								name="theme-dropdown"
+								class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+								aria-label="Retro"
+								value="retro"
+							/>
+						</li>
+						<li>
+							<input
+								type="radio"
+								name="theme-dropdown"
+								class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+								aria-label="Cyberpunk"
+								value="cyberpunk"
+							/>
+						</li>
+						<li>
+							<input
+								type="radio"
+								name="theme-dropdown"
+								class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+								aria-label="Valentine"
+								value="valentine"
+							/>
+						</li>
+						<li>
+							<input
+								type="radio"
+								name="theme-dropdown"
+								class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+								aria-label="Aqua"
+								value="aqua"
+							/>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<section class="flex-grow flex justify-center flex-col">
+			<slot></slot>
+		</section>
+		<footer class="text-xs text-gray-600"><p>@mostghoste 2024</p></footer>
+	</main>
+</div>

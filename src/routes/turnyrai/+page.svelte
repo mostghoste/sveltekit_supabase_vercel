@@ -21,7 +21,7 @@
 		</form>
 	</div>
 {/if}
-{#if tournaments}
+{#if tournaments && tournaments.length > 0}
 	<!-- <p>Turnyrų skaičius: {tournaments.length}</p> -->
 	<section class="py-2 gap-2 flex flex-col overflow-y-scroll max-h-[33rem] min-w-[22rem]">
 		{#each tournaments as tournament}
@@ -30,4 +30,6 @@
 	</section>
 {:else}
 	<h2>🔎 Turnyrų nerasta</h2>
+	<p class="text-sm">Teks palaukti kol adminas kažką sukurs 🕒</p>
+	<a class="btn btn-neutral" href="/">Atgal</a>
 {/if}

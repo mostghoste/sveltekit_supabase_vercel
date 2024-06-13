@@ -4,7 +4,7 @@
 	import '../app.css';
 
 	export let data;
-	$: ({ session, supabase } = data);
+	$: ({ session, supabase, user, profile } = data);
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
@@ -15,13 +15,30 @@
 
 		return () => data.subscription.unsubscribe();
 	});
+
+	$: logout = async () => {
+		// console.log('Logging out');
+		const { error } = await supabase.auth.signOut();
+		if (error) {
+			console.error(error);
+		}
+	};
 </script>
 
 <div class="flex justify-center items-center h-screen bg-primary-content">
 	<main
 		class="artboard phone-4 flex items-center flex-col text-center rounded-box border-primary md:border lg:border p-2 bg-neutral-content"
 	>
-		<header class="w-full flex justify-end">
+		<header class="w-full flex justify-between items-center">
+			<div class="flex gap-2">
+				{#if user}
+					<button class="btn btn-sm btn-primary" on:click={logout}>Atsijungti</button>
+					<div class="flex flex-col items-start">
+						<p class="text-xs">sveikas,</p>
+						<p class="font-bold text-sm">{profile?.username}{profile?.admin ? ' (Admin)' : ''}</p>
+					</div>
+				{/if}
+			</div>
 			<nav class="w-fit">
 				<div class="dropdown">
 					<div tabindex="0" role="button" class="btn">

@@ -11,10 +11,10 @@
 	};
 </script>
 
-<h1>Toto!</h1>
+<h1 class="font-bold text-2xl">👀 Stebėtojas</h1>
 {#if user}
 	<p>Tu prisijungęs kaip: {user.email}</p>
-	<button on:click={logout}>Atsijungti</button>
+	<button class="btn btn-primary" on:click={logout}>Atsijungti</button>
 	<p>Username: {profile?.username}</p>
 	{#if !profile?.username}
 		<form method="post" action="?/setUsername">

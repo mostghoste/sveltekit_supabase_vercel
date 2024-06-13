@@ -63,20 +63,25 @@
 	</form>
 {/if}
 
-<h2>Ateinančios varžybos</h2>
-{#if matchups}
-	<p>Ateinančių varžybų skaičius: {matchups.length}</p>
-	<ul>
-		{#each matchups as matchup}
-			<li>
-				{matchup.team_home} - {matchup.team_away}; Spėjimai
-				<strong>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</strong>
-			</li>
-		{/each}
-	</ul>
-{:else}
-	<p>Ateinančių varžybų nerasta</p>
-{/if}
+<section class="flex flex-col gap-2">
+	<div class="collapse collapse-plus bg-base-200">
+		<input type="checkbox" />
+		<p class="collapse-title p-0 m-0 flex justify-center items-center text-xl font-medium">
+			🔜 Ateinančios varžybos ({matchups?.length || 0})
+		</p>
+		<div class="collapse-content">
+			{#if matchups}
+				<ol>
+					{#each matchups as matchup}
+						<li class="text-sm text-left">{matchup.team_home} - {matchup.team_away}</li>
+					{/each}
+				</ol>
+			{:else}
+				<p>Ateinančių varžybų nerasta</p>
+			{/if}
+		</div>
+	</div>
+</section>
 
 {#if tournament_participant}
 	<h2>Mano spėjimai</h2>

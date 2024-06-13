@@ -17,9 +17,9 @@
 	});
 </script>
 
-<div class="flex justify-center items-center h-screen">
+<div class="flex justify-center items-center h-screen bg-primary-content">
 	<main
-		class="artboard phone-4 flex items-center flex-col text-center rounded-box md:border lg:border p-2"
+		class="artboard phone-4 flex items-center flex-col text-center rounded-box border-primary md:border lg:border p-2 bg-neutral-content"
 	>
 		<header class="w-full flex justify-end">
 			<nav class="w-fit">

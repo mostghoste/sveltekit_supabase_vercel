@@ -1,10 +1,13 @@
 <script lang="ts">
 	export let matchup;
+	export let prediction;
 
 	export let onUpdateScore;
 
-	let home_score_prediction: number;
-	let away_score_prediction: number;
+	$: home_score_prediction = prediction.prediction_home;
+	$: away_score_prediction = prediction.prediction_away;
+
+	console.log(home_score_prediction);
 </script>
 
 <article class="bg-base-200 rounded-box flex justify-between p-2 gap-2 text-sm">
@@ -13,6 +16,7 @@
 		on:click={() => {
 			home_score_prediction = 1;
 			away_score_prediction = 0;
+			onUpdateScore(home_score_prediction, away_score_prediction);
 		}}
 	>
 		{matchup.team_home}
@@ -38,6 +42,7 @@
 				on:click={() => {
 					home_score_prediction = 1;
 					away_score_prediction = 0;
+					onUpdateScore(home_score_prediction, away_score_prediction);
 				}}
 				class="btn btn-sm btn-secondary px-2">1:0</button
 			>
@@ -45,6 +50,7 @@
 				on:click={() => {
 					home_score_prediction = 1;
 					away_score_prediction = 1;
+					onUpdateScore(home_score_prediction, away_score_prediction);
 				}}
 				class="btn btn-sm btn-secondary px-2">1:1</button
 			>
@@ -52,6 +58,7 @@
 				on:click={() => {
 					home_score_prediction = 0;
 					away_score_prediction = 1;
+					onUpdateScore(home_score_prediction, away_score_prediction);
 				}}
 				class="btn btn-sm btn-secondary px-2">0:1</button
 			>
@@ -61,6 +68,7 @@
 		on:click={() => {
 			home_score_prediction = 0;
 			away_score_prediction = 1;
+			onUpdateScore(home_score_prediction, away_score_prediction);
 		}}
 		class="min-w-24 h-24 bg-primary-content text-primary flex justify-center items-center rounded-box text-"
 	>

@@ -1,13 +1,23 @@
 <script lang="ts">
 	import PredictionCard from './PredictionCard.svelte';
 
-	type matchup = {
+	type Prediction = {
 		home_team: string;
 		away_team: string;
+		prediction_home?: number;
+		prediction_away?: number;
 	};
 
-	export let unpredictedMatchups: matchup[] = [];
+	export let unpredictedMatchups = [];
+	let predictions: Prediction[] = unpredictedMatchups.map((pred) => {
+		return { home_team: pred.team_home, away_team: pred.team_away };
+	});
 	let currentlySelectedMatchup = 0;
+
+	const onUpdateScore = (home: number, away: number) => {
+		predictions[currentlySelectedMatchup].prediction_home = home;
+		predictions[currentlySelectedMatchup].prediction_away = away;
+	};
 </script>
 
 {#if unpredictedMatchups && unpredictedMatchups.length > 0}
@@ -16,8 +26,12 @@
 			<span class="font-bold">Dar neatlikti spėjimai</span>
 			<span>{currentlySelectedMatchup + 1}/{unpredictedMatchups.length}</span>
 		</header>
-		<PredictionCard matchup={unpredictedMatchups[currentlySelectedMatchup]}></PredictionCard>
-		<footer class="flex gap-2">
+		<PredictionCard
+			matchup={unpredictedMatchups[currentlySelectedMatchup]}
+			prediction={predictions[currentlySelectedMatchup]}
+			{onUpdateScore}
+		></PredictionCard>
+		<footer class="flex gap-2 justify-between">
 			<button
 				on:click={() => {
 					if (currentlySelectedMatchup > 0) {
@@ -25,7 +39,7 @@
 					}
 				}}
 				class="btn btn-secondary"
-				type="submit">prev</button
+				type="submit">⬅️ Atgal</button
 			>
 			<button
 				on:click={() => {
@@ -33,8 +47,8 @@
 						currentlySelectedMatchup = currentlySelectedMatchup + 1;
 					}
 				}}
-				class="btn btn-primary"
-				type="submit">next</button
+				class="btn btn-primary btn-success"
+				type="submit">Kitas ➡️</button
 			>
 		</footer>
 	</section>

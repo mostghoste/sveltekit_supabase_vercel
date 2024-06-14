@@ -35,6 +35,7 @@
 <span>Turnyras</span>
 {#if tournament}
 	<h1 class="m-0 p-0">{tournament.name}</h1>
+	<p class="text-error">Spėjimų atlikimas uždaromas 2024-06-14 23:59!</p>
 {:else}
 	<p>Turnyras nerastas</p>
 {/if}
@@ -45,8 +46,6 @@
 
 {#if tournament_participant}
 	<p class="text-sm">Tu šiame turnyre <strong>dalyvauji</strong></p>
-	<p class="text-error">Spėjimų atlikimas uždaromas 2024-06-14 23:59!</p>
-
 	<Predictions {unpredictedMatchups}></Predictions>
 {:else}
 	<p class="text-sm mt-2 mb-1">Tu šiame turnyre dar <strong>nedalyvauji</strong></p>

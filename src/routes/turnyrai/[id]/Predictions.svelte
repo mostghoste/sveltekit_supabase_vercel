@@ -18,6 +18,25 @@
 		predictions[currentlySelectedMatchup].prediction_home = home;
 		predictions[currentlySelectedMatchup].prediction_away = away;
 	};
+
+	$: validatePrediction = () => {
+		let predictionInvalid = true;
+		let home = predictions[currentlySelectedMatchup].prediction_home;
+		let away = predictions[currentlySelectedMatchup].prediction_away;
+
+		if (home !== undefined && away !== undefined) {
+			// console.log('Prediction has score');
+			try {
+				if (Number(home) >= 0 && Number(away) >= 0) {
+					predictionInvalid = false;
+				}
+			} catch {
+				predictionInvalid = false;
+			}
+		}
+
+		return predictionInvalid;
+	};
 </script>
 
 {#if unpredictedMatchups && unpredictedMatchups.length > 0}
@@ -39,17 +58,31 @@
 					}
 				}}
 				class="btn btn-secondary"
-				type="submit">⬅️ Atgal</button
+				type="submit"
+				disabled={currentlySelectedMatchup < 1}>⬅️ Atgal</button
 			>
-			<button
-				on:click={() => {
-					if (currentlySelectedMatchup + 1 < unpredictedMatchups.length) {
-						currentlySelectedMatchup = currentlySelectedMatchup + 1;
-					}
-				}}
-				class="btn btn-primary btn-success"
-				type="submit">Kitas ➡️</button
-			>
+			{#if currentlySelectedMatchup + 1 < unpredictedMatchups.length}
+				<button
+					on:click={() => {
+						if (currentlySelectedMatchup + 1 < unpredictedMatchups.length) {
+							currentlySelectedMatchup = currentlySelectedMatchup + 1;
+						}
+					}}
+					class="btn btn-primary"
+					type="submit"
+					disabled={validatePrediction()}>Kitas ➡️</button
+				>
+			{:else}
+				<button
+					on:click={() => {
+						if (currentlySelectedMatchup + 1 < unpredictedMatchups.length) {
+							currentlySelectedMatchup = currentlySelectedMatchup + 1;
+						}
+					}}
+					class="btn btn-primary btn-success"
+					type="submit">Peržiūrėti</button
+				>
+			{/if}
 		</footer>
 	</section>
 {/if}

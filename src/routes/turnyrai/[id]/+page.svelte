@@ -57,7 +57,7 @@
 		<li>Turnyrinėje lentelėje pasirodyti geriau už visus kitus</li>
 	</ul>
 	<form method="post" action="?/join">
-		<button class="btn btn-success" type="submit">Dalyvauti</button>
+		<button class="btn btn-success mb-4" type="submit">Dalyvauti</button>
 	</form>
 {/if}
 

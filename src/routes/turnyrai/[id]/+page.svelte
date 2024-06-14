@@ -45,6 +45,7 @@
 
 {#if tournament_participant}
 	<p class="text-sm">Tu šiame turnyre <strong>dalyvauji</strong></p>
+	<p class="text-error">Spėjimų atlikimas uždaromas 2024-06-14 23:59!</p>
 
 	<Predictions {unpredictedMatchups}></Predictions>
 {:else}

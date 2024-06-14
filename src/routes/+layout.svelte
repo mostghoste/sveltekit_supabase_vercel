@@ -2,17 +2,20 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import '../app.css';
+	import { redirect } from '@sveltejs/kit';
 
 	export let data;
 	$: ({ session, supabase, user, profile } = data);
 
 	onMount(() => {
+		if (!user) {
+			redirect(301, '/');
+		}
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
 			if (newSession?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
 			}
 		});
-
 		return () => data.subscription.unsubscribe();
 	});
 

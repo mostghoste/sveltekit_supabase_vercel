@@ -62,7 +62,10 @@
 					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
 				/></svg
 			>
-			<span>Pasitikrink savo el. pašto dėžutę!</span>
+			<span
+				>Pasitikrink savo el. pašto dėžutę! Jei laiško negavai, pasitikrink spam'ą ir pabandyk iš
+				naujo.</span
+			>
 		</div>
 	{/if}
 </form>

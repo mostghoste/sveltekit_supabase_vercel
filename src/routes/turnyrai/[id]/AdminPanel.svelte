@@ -3,10 +3,10 @@
 
 	export let matchups;
 	export let groups;
-	export let selectedGroup;
 	export let unpredictedMatchups;
 	export let joinedPredictions;
 
+	let selectedGroup;
 	let selectedMatchups = [];
 	let loading = false;
 	let allSelected = false;

@@ -40,7 +40,7 @@
 {/if}
 
 {#if profile?.admin}
-	<AdminPanel {matchups} {groups} {selectedGroup} {unpredictedMatchups} {joinedPredictions} />
+	<AdminPanel {matchups} {groups} {unpredictedMatchups} {joinedPredictions} />
 {/if}
 
 {#if tournament_participant}

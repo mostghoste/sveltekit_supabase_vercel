@@ -265,25 +265,40 @@ export const actions: Actions = {
     
         const calculatePoints = (matchup, prediction) => {
             if (matchup.status === "done") {
+                let points = 0;
+        
+                // Check if the outcome is correctly predicted
                 const predictedOutcome =
                     (prediction.score_home > prediction.score_away && matchup.score_home > matchup.score_away) ||
                     (prediction.score_home < prediction.score_away && matchup.score_home < matchup.score_away) ||
                     (prediction.score_home === prediction.score_away && matchup.score_home === matchup.score_away);
-    
+        
+                if (predictedOutcome) {
+                    points += 1;
+                }
+        
+                // Check if the exact score is correctly predicted
                 const exactScore =
                     matchup.score_home === prediction.score_home &&
                     matchup.score_away === prediction.score_away;
-    
-                if (predictedOutcome && exactScore) {
-                    return 3;
-                } else if (predictedOutcome) {
-                    return 1;
-                } else {
-                    return 0;
+        
+                if (exactScore) {
+                    points += 1;
                 }
+        
+                // Check if the point difference is correctly predicted
+                const predictedDifference = prediction.score_home - prediction.score_away;
+                const actualDifference = matchup.score_home - matchup.score_away;
+        
+                if (predictedDifference === actualDifference) {
+                    points += 1;
+                }
+        
+                return points;
             }
             return null;
         };
+        
     
         try {
             const formData = await request.formData();

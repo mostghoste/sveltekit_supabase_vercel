@@ -242,67 +242,75 @@ export const actions: Actions = {
 		return { success: true, matchups: data };
 	},
     editMatchups: async ({ request, params, locals: { supabase } }) => {
-        console.log("Updating points")
-
-        const calculatePoints = (matchup, prediction): number => {
-
-            return 0;
-        }
-
+        // console.log("Updating points");
+    
+        const calculatePoints = (matchup, prediction) => {
+            if (matchup.status === "done") {
+                const predictedOutcome =
+                    (prediction.score_home > prediction.score_away && matchup.score_home > matchup.score_away) ||
+                    (prediction.score_home < prediction.score_away && matchup.score_home < matchup.score_away) ||
+                    (prediction.score_home === prediction.score_away && matchup.score_home === matchup.score_away);
+    
+                const exactScore =
+                    matchup.score_home === prediction.score_home &&
+                    matchup.score_away === prediction.score_away;
+    
+                if (predictedOutcome && exactScore) {
+                    return 3;
+                } else if (predictedOutcome) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+            return null;
+        };
+    
         try {
             const formData = await request.formData();
-            const matchups = JSON.parse(formData.get('matchups') as string);
-
+            const matchups = JSON.parse(formData.get('matchups'));
 
             const { data: matchup_predictions, error: matchup_error } = await supabase
-            .from('matchup_predictions')
-            .select('*')
-            .eq("tournament_id", params.id)
-
-            // console.log(matchup_predictions);
-
-            if (!matchup_predictions) {
-                return
+                .from('matchup_predictions')
+                .select('*')
+                .eq("tournament_id", params.id);
+    
+            console.log(matchup_predictions);
+    
+            if (matchup_error) {
+                console.error('Error fetching matchup predictions:', matchup_error);
+                return { error: 'Error fetching matchup predictions' };
             }
     
+            // For each matchup
             const updates = await Promise.all(matchups.map(async (matchup) => {
-                // Handle changing the status of all matchup_predictions
                 const status = matchup.status;
                 const predictions = matchup_predictions.filter(pred => pred.matchup_id === matchup.id);
 
-                // console.log("Preds:" + JSON.stringify(predictions))
-
-                let points = null
-                if (status === "open") {
-                    points = null;
-                } else if (status === "")
+                console.log(`\nMatchup: ${matchup.team_home} vs ${matchup.team_away} - Status: ${matchup.status}, Scores: ${matchup.score_home}-${matchup.score_away}`);
     
-                if (status === "closed") {
-                    points = null;
-                }
+                const predictionUpdates = predictions.map(prediction => {
+                    const points = (status === "done") ? calculatePoints(matchup, prediction) : null;
+                    console.log(`   User: ${prediction.user_id}, Selected Team: ${prediction.selected_team}, Predicted Scores: ${prediction.score_home}-${prediction.score_away}, Calculated Points: ${points}`);
+                    return {
+                        ...prediction,
+                        points,
+                        prediction_status: status
+                    };
+                });
 
-                if (status === "done") {
-                    console.log(`\nPredictions for match: ${matchup.team_home} - ${matchup.team_away}`)
-                    predictions.map((pred) => {
-                        console.log(`${pred.id}: ${pred.matchup_outcome}`)
-                    })
-                    // points = calculatePoints(matchup, matchup_predictions);
-                }
-
-                if (status === "cancelled") {
-                    points = null;
-                }
-
-                const { data: predictionData, error: predictionError } = await supabase
-                .from('matchup_predictions')
-                .update({ prediction_status: status, points: points })
-                .eq('tournament_id', params.id)
-                .eq('matchup_id', matchup.id)
-                .select();
-
-                if (predictionError) {
-                    console.error('Error updating matchup_predictions:', predictionError);
-                    throw predictionError;
+                // console.log(predictionUpdates.length)
+    
+                // Update predictions in the database
+                if (predictionUpdates.length > 0) {
+                    const { error: predictionUpdateError } = await supabase
+                        .from('matchup_predictions')
+                        .upsert(predictionUpdates);
+    
+                    if (predictionUpdateError) {
+                        console.error('Error updating matchup predictions:', predictionUpdateError);
+                        return { error: 'Error updating matchup predictions' };
+                    }
                 }
     
                 return {
@@ -310,8 +318,8 @@ export const actions: Actions = {
                     score_home: matchup.score_home,
                     score_away: matchup.score_away,
                     status: matchup.status,
-                    team_home: matchup.team_home, // Make sure to include team_home
-                    team_away: matchup.team_away, // Make sure to include team_away
+                    team_home: matchup.team_home,
+                    team_away: matchup.team_away,
                     predictions_open: matchup.status === "open"
                 };
             }));
@@ -333,5 +341,6 @@ export const actions: Actions = {
             return { error: 'Error processing matchups' };
         }
     }
+    
     
   };

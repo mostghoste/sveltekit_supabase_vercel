@@ -35,7 +35,7 @@
 <span>Turnyras</span>
 {#if tournament}
 	<h1 class="m-0 p-0">{tournament.name}</h1>
-	<p class="text-error">Spėjimų atlikimas uždaromas 2024-06-14 23:59!</p>
+	<!-- <p class="text-error">Spėjimų atlikimas uždaromas 2024-06-14 23:59!</p> -->
 {:else}
 	<p>Turnyras nerastas</p>
 {/if}
@@ -69,7 +69,9 @@
 		<div class="collapse-content">
 			{#if matchups}
 				<ol>
-					{#each matchups as matchup}
+					{#each (matchups = matchups?.sort((a, b) => {
+						a.created_at - b.created_at;
+					})) as matchup}
 						<li class="text-sm text-left">{matchup.team_home} - {matchup.team_away}</li>
 					{/each}
 				</ol>

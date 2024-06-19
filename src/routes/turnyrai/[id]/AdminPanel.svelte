@@ -109,10 +109,6 @@
 			}, 2000);
 		}
 	}
-
-	$: handleGroupChange = (groupName: string) => {
-		selectedGroup = groupName;
-	};
 </script>
 
 <div class="bg-warning p-4 rounded-box flex flex-col gap-4 w-full">
@@ -175,7 +171,15 @@
 			</thead>
 			<tbody>
 				{#if matchups}
-					{#each matchups as matchup}
+					{#each matchups?.sort((a, b) => {
+						if (!a.group_id) {
+							return b;
+						}
+						if (!b.group_id) {
+							return a;
+						}
+						return a.group_id.name > b.group_id.name;
+					}) as matchup}
 						<tr>
 							<td>
 								<input

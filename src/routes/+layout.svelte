@@ -108,6 +108,6 @@
 		<section class="flex-grow flex justify-center flex-col prose">
 			<slot></slot>
 		</section>
-		<footer class="text-xs text-gray-600"><p>@mostghoste 2024 | Beta 1.0</p></footer>
+		<footer class="text-xs text-gray-600"><p>@mostghoste 2024 | Beta 1.01</p></footer>
 	</main>
 </div>

@@ -290,7 +290,7 @@ export const actions: Actions = {
                 const predictedDifference = prediction.score_home - prediction.score_away;
                 const actualDifference = matchup.score_home - matchup.score_away;
         
-                if (predictedDifference === actualDifference) {
+                if (predictedDifference === actualDifference && matchup.score_home != matchup.score_away) {
                     points += 1;
                 }
         

@@ -160,13 +160,12 @@
 			<thead>
 				<tr>
 					<th><button on:click={toggleAllMatchups}>✅</button></th>
-					<th>Komanda 1</th>
-					<th>Komanda 2</th>
+					<th>Varžybos</th>
 					<th>Grupė</th>
+					<th>Status</th>
+					<th>1 tšk.</th>
+					<th>2 tšk.</th>
 					<th>Spėjimai</th>
-					<th>Statusas</th>
-					<th>1 taškai</th>
-					<th>2 taškai</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -188,12 +187,11 @@
 									on:change={() => toggleMatchupSelection(matchup.id)}
 								/>
 							</td>
-							<td>{matchup.team_home}</td>
-							<td>{matchup.team_away}</td>
+							<td>{matchup.team_home} - {matchup.team_away}</td>
 							<td>{matchup.group_id ? matchup.group_id.name : ''}</td>
-							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
 							<td class="center">
 								<select
+									class="w-16"
 									bind:value={matchup.status}
 									on:change={(e) => {
 										updateField(matchup.id, 'status', e.target.value);
@@ -207,7 +205,7 @@
 							</td>
 							<td>
 								<input
-									class="score"
+									class="w-8"
 									type="number"
 									name="home_score"
 									placeholder={matchup.score_home || '-'}
@@ -217,7 +215,7 @@
 							</td>
 							<td>
 								<input
-									class="score"
+									class="w-8"
 									type="number"
 									name="away_score"
 									placeholder={matchup.score_away || '-'}
@@ -225,6 +223,7 @@
 									on:input={(e) => updateScore(matchup.id, 'score_away', e.target.value)}
 								/>
 							</td>
+							<td>{matchup.predictions_open ? 'atidaryti' : 'uždaryti'}</td>
 						</tr>
 					{/each}
 				{/if}
@@ -264,19 +263,5 @@
 	th {
 		border: 1px solid gray;
 		padding: 2px;
-	}
-
-	.center {
-		text-align: center;
-	}
-
-	.score {
-		width: 4rem;
-		text-align: center;
-	}
-
-	.groupContainer {
-		display: flex;
-		gap: 0.4rem;
 	}
 </style>

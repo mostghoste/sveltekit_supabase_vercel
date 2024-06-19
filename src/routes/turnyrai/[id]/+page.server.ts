@@ -46,12 +46,31 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
     const {data: profiles} = await supabase.from('profiles').select("username, id")
 
-    const leaderboardData = tournament_participants?.map(participant => {
-      const username = profiles?.find((profile) => {return profile.id === participant.user_id})?.username
-      return {user_id: participant.user_id, points: participant.points, username}
-    })
+    const { data: allPredictions } = await supabase
+    .from('matchup_predictions')
+    .select('user_id, points')
+    .eq('tournament_id', params.id)
+    
+    // Aggregate points for each participant
+    const participantPoints = allPredictions.reduce((acc, prediction) => {
+        if (prediction.points !== null) {
+            if (!acc[prediction.user_id]) {
+                acc[prediction.user_id] = 0;
+            }
+            acc[prediction.user_id] += prediction.points;
+        }
+        return acc;
+    }, {});
 
-    leaderboardData?.sort((a, b) => b.points - a.points);
+    // Prepare leaderboard data
+    const leaderboardData = tournament_participants.map(participant => {
+        const username = profiles.find(profile => profile.id === participant.user_id)?.username || "Unknown";
+        const points = participantPoints[participant.user_id] || 0;
+        return { user_id: participant.user_id, points, username };
+    });
+
+    // Sort leaderboard by points
+    leaderboardData.sort((a, b) => b.points - a.points);
 
     return {tournament: tournament[0], tournament_participant: tournament_participant[0], matchups, matchup_predictions, tournament_participants: leaderboardData, groups};
 }) satisfies PageServerLoad;

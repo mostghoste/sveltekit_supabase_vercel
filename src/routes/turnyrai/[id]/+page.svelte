@@ -3,6 +3,7 @@
 	import AdminPanel from './AdminPanel.svelte';
 	import type { PageData } from './$types';
 	import Predictions from './Predictions.svelte';
+	import Leaderboard from './Leaderboard.svelte';
 
 	export let data: PageData;
 	$: ({
@@ -197,21 +198,7 @@
 	{/if}
 {/if}
 
-<h2>Dalyvių taškai</h2>
-{#if tournament_participants}
-	<p>Dalyvių skaičius: {tournament_participants.length}</p>
-	<ol>
-		{#each tournament_participants as participant}
-			{#if user?.id === participant.user_id}
-				<li><strong>{participant.username}</strong> - {participant.points}</li>
-			{:else}
-				<li>{participant.username} - {participant.points}</li>
-			{/if}
-		{/each}
-	</ol>
-{:else}
-	<p>Dalyvių nerasta</p>
-{/if}
+<Leaderboard {tournament_participants} {user} />
 
 <!-- {#if errorMessage != ''}
 	<div class="clippy">

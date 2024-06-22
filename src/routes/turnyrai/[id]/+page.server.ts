@@ -261,40 +261,82 @@ export const actions: Actions = {
 		return { success: true, matchups: data };
 	},
     editMatchups: async ({ request, params, locals: { supabase } }) => {
-        // console.log("Updating points");
+        console.log("Updating points");
     
         const calculatePoints = (matchup, prediction) => {
             if (matchup.status === "done") {
                 let points = 0;
-        
-                // Check if the outcome is correctly predicted
-                const predictedOutcome =
-                    (prediction.score_home > prediction.score_away && matchup.score_home > matchup.score_away) ||
-                    (prediction.score_home < prediction.score_away && matchup.score_home < matchup.score_away) ||
-                    (prediction.score_home === prediction.score_away && matchup.score_home === matchup.score_away);
-        
-                if (predictedOutcome) {
-                    points += 1;
+
+                // Get predicted outcome
+                let predictedOutcome = "tie";
+                if (prediction.score_home < prediction.score_away) {
+                    predictedOutcome = "away_win";
                 }
-        
-                // Check if the exact score is correctly predicted
-                const exactScore =
-                    matchup.score_home === prediction.score_home &&
-                    matchup.score_away === prediction.score_away;
-        
-                if (exactScore) {
-                    points += 1;
+                else if (prediction.score_home > prediction.score_away) {
+                    predictedOutcome = "home_win"
                 }
-        
-                // Check if the point difference is correctly predicted
-                const predictedDifference = prediction.score_home - prediction.score_away;
-                const actualDifference = matchup.score_home - matchup.score_away;
-        
-                if (predictedDifference === actualDifference && matchup.score_home != matchup.score_away) {
-                    points += 1;
+
+                // Check if outcome was guessed correctly
+                if (matchup.score_home > matchup.score_away && predictedOutcome === "home_win" || 
+                    matchup.score_home < matchup.score_away && predictedOutcome === "away_win" || 
+                    matchup.score_home === matchup.score_away && predictedOutcome === "tie"
+                ) {
+                    points = points + 1;
+                    console.log("      +1 for outcome")
                 }
-        
+
+                // Check if the exact difference between scores was guessed:
+                if (matchup.score_home - matchup.score_away === prediction.score_home - prediction.score_away) {
+                    points = points + 1;
+                    console.log("      +1 for difference")
+                }
+
+
+                // Check if the exact score was guessed:
+                if (matchup.score_home === prediction.score_home && matchup.score_away === prediction.score_away) {
+                    points = points + 1;
+                    console.log("      +1 for exact score")
+                }
+
+                // Tie modifications
+                if (predictedOutcome === "tie" &&
+                    matchup.score_home === matchup.score_away &&
+                    !(matchup.score_home === prediction.score_home && matchup.score_away === prediction.score_away)){
+                    points = points - 1;
+                    console.log("      -1 for tie modifier")
+                }
+
                 return points;
+                // let points = 0;
+        
+                // // Check if the outcome is correctly predicted
+                // const predictedOutcome =
+                //     (prediction.score_home > prediction.score_away && matchup.score_home > matchup.score_away) ||
+                //     (prediction.score_home < prediction.score_away && matchup.score_home < matchup.score_away) ||
+                //     (prediction.score_home === prediction.score_away && matchup.score_home === matchup.score_away);
+        
+                // if (predictedOutcome) {
+                //     points += 1;
+                // }
+        
+                // // Check if the exact score is correctly predicted
+                // const exactScore =
+                //     matchup.score_home === prediction.score_home &&
+                //     matchup.score_away === prediction.score_away;
+        
+                // if (exactScore) {
+                //     points += 1;
+                // }
+        
+                // // Check if the point difference is correctly predicted
+                // const predictedDifference = prediction.score_home - prediction.score_away;
+                // const actualDifference = matchup.score_home - matchup.score_away;
+        
+                // if (predictedDifference === actualDifference && matchup.score_home != matchup.score_away) {
+                //     points += 1;
+                // }
+        
+                // return points;
             }
             return null;
         };
@@ -325,7 +367,7 @@ export const actions: Actions = {
     
                 const predictionUpdates = predictions.map(prediction => {
                     const points = (status === "done") ? calculatePoints(matchup, prediction) : null;
-                    console.log(`   User: ${prediction.user_id}, Selected Team: ${prediction.selected_team}, Predicted Scores: ${prediction.score_home}-${prediction.score_away}, Calculated Points: ${points}`);
+                    console.log(`   User: ${prediction.user_id}, Selected Team: ${prediction.selected_team}, Prediction: ${prediction.score_home}-${prediction.score_away}; Points: ${points}\n`);
                     return {
                         ...prediction,
                         points,

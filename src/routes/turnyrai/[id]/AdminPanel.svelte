@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Bracket from '$lib/assets/Bracket.png';
 
 	export let matchups;
 	export let groups;
@@ -152,6 +153,12 @@
 		</div>
 		<button class="btn btn-secondary" type="submit">Pridėti</button>
 	</form>
+
+	<section class="bg-black bg-opacity-20 rounded-box flex flex-col gap-1 p-2">
+		<h3>Playoff varžybų pridėjimas</h3>
+		<img src={Bracket} alt="Bracket example" />
+	</section>
+
 	<section
 		class="bg-black bg-opacity-20 rounded-box flex flex-col gap-1 p-2 overflow-scroll max-w-80"
 	>

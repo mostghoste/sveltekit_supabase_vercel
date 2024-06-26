@@ -33,6 +33,16 @@
 		const matchup = matchups?.find((matchup) => prediction.matchup_id === matchup.id);
 		return { ...prediction, team_home: matchup?.team_home, team_away: matchup?.team_away };
 	});
+
+	const getMatchupFromId = (id: string) => {
+		let matchup = matchups?.find((m) => {
+			return m.id == id;
+		});
+
+		if (matchup) {
+			return `${matchup.team_home} - ${matchup.team_away} (${format(new Date(matchup.start_time), 'MM-dd HH:mm')})`;
+		} else return '';
+	};
 </script>
 
 <span>Turnyras</span>
@@ -69,7 +79,7 @@
 		<p class="collapse-title p-0 m-0 flex justify-center items-center text-xl font-medium">
 			🔜 Ateinančios varžybos ({matchups?.length || 0})
 		</p>
-		<div class="collapse-contents">
+		<div class="collapse-content">
 			{#if matchups}
 				<!-- <p>Paspaudus ant paryškintų komandų sužinosi iš kokių varžybų ateis komanda</p> -->
 				<table>
@@ -86,14 +96,24 @@
 						<tr>
 							<td>
 								{#if matchup.team_home === 'TBD' && matchup.home_previous}
-									<span class="font-bold" title={`Nugalėtojas iš varžybų ${matchup.home_previous}`}
+									<span
+										class="font-bold"
+										title={`Nugalėtojas iš varžybų ${getMatchupFromId(matchup.home_previous)}`}
 										>{matchup.team_home}</span
 									>
 								{:else}
 									<span>{matchup.team_home}</span>
 								{/if}
 								-
-								<span>{matchup.team_away}</span>
+								{#if matchup.team_away === 'TBD' && matchup.away_previous}
+									<span
+										class="font-bold"
+										title={`Nugalėtojas iš varžybų ${getMatchupFromId(matchup.away_previous)}`}
+										>{matchup.team_away}</span
+									>
+								{:else}
+									<span>{matchup.team_away}</span>
+								{/if}
 							</td>
 							<td>{format(new Date(matchup.start_time), 'MM-dd HH:mm')}</td>
 							<td>{matchup.type}</td>

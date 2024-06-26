@@ -43,6 +43,14 @@
 			return `${matchup.team_home} - ${matchup.team_away} (${format(new Date(matchup.start_time), 'MM-dd HH:mm')})`;
 		} else return '';
 	};
+
+	$: upcomingMatchups = matchups?.filter((m) => {
+		return m.status === 'open' || m.status === 'closed';
+	});
+
+	$: finishedMatchups = matchups?.filter((m) => {
+		return m.status === 'done';
+	});
 </script>
 
 <span>Turnyras</span>
@@ -77,18 +85,18 @@
 	<div class="collapse collapse-plus bg-base-200">
 		<input type="checkbox" />
 		<p class="collapse-title p-0 m-0 flex justify-center items-center text-xl font-medium">
-			🔜 Ateinančios varžybos ({matchups?.length || 0})
+			🔜 Ateinančios varžybos ({upcomingMatchups?.length || 0})
 		</p>
 		<div class="collapse-content">
-			{#if matchups}
+			{#if upcomingMatchups}
 				<!-- <p>Paspaudus ant paryškintų komandų sužinosi iš kokių varžybų ateis komanda</p> -->
 				<table>
 					<thead class="font-bold">
 						<td>Komandos</td>
-						<td>Laikas</td>
-						<td>Tipas</td>
+						<td class="text-center">Laikas</td>
+						<td class="text-center">Tipas</td>
 					</thead>
-					{#each (matchups = matchups.sort((a, b) => {
+					{#each (matchups = upcomingMatchups.sort((a, b) => {
 						if (!a.start_time) return 1;
 						if (!b.start_time) return -1;
 						return new Date(a.start_time) - new Date(b.start_time);
@@ -115,10 +123,50 @@
 									<span>{matchup.team_away}</span>
 								{/if}
 							</td>
-							<td
-								>{matchup.start_time ? format(new Date(matchup.start_time), 'MM-dd HH:mm') : ''}</td
+							<td class="text-center"
+								>{matchup.start_time
+									? format(new Date(matchup.start_time), 'MM-dd HH:mm')
+									: '-'}</td
 							>
-							<td>{matchup.type || ''}</td>
+							<td class="text-center">{matchup.type || '-'}</td>
+						</tr>
+					{/each}
+				</table>
+			{:else}
+				<p>Ateinančių varžybų nerasta</p>
+			{/if}
+		</div>
+	</div>
+
+	<div class="collapse collapse-plus bg-base-200">
+		<input type="checkbox" />
+		<p class="collapse-title p-0 m-0 flex justify-center items-center text-xl font-medium">
+			🏁 Pasibaigusios varžybos ({finishedMatchups?.length || 0})
+		</p>
+		<div class="collapse-content">
+			{#if finishedMatchups}
+				<!-- <p>Paspaudus ant paryškintų komandų sužinosi iš kokių varžybų ateis komanda</p> -->
+				<table class="table-zebra">
+					<thead class="font-bold">
+						<td>Komandos</td>
+						<td class="text-center">Rezultatas</td>
+						<td class="text-center" title="Kiek taškų gavai iš spėjimo">Taškai</td>
+					</thead>
+					{#each (matchups = finishedMatchups.sort((a, b) => {
+						if (!a.start_time) return 1;
+						if (!b.start_time) return -1;
+						return new Date(a.start_time) - new Date(b.start_time);
+					})) as matchup}
+						<tr>
+							<td>
+								<span>{matchup.team_home}</span>
+								-
+								<span>{matchup.team_away}</span>
+							</td>
+							<td class="text-center">{matchup.score_home}:{matchup.score_away}</td>
+							<td class="text-center" title="Kiek taškų gavai iš spėjimo"
+								>{matchup_predictions?.find((p) => p.matchup_id === matchup.id)?.points || `0`}</td
+							>
 						</tr>
 					{/each}
 				</table>

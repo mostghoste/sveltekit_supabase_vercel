@@ -13,7 +13,7 @@
 		(a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
 	);
 	let predictions: Prediction[] = unpredictedMatchups.map((pred) => {
-		return { home_team: pred.team_home, away_team: pred.team_away };
+		return { home_team: pred.team_home, away_team: pred.team_away, penalty_series: false };
 	});
 	let currentlySelectedMatchup = 0;
 
@@ -72,7 +72,7 @@ Teisingas TAIP spėjimas duoda 1 tašką.">Ar bus baudinių serija?</span
 				title="Teisingas NE spėjimas duoda 0.25 taško.
 Teisingas TAIP spėjimas duoda 1 tašką."
 				type="checkbox"
-				checked={false}
+				bind:checked={currentMatchup.penalty_series}
 				class="checkbox checkbox-success checkbox-xs"
 			/>
 		</div>

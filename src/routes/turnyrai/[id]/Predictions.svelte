@@ -40,6 +40,8 @@
 		return predictionInvalid;
 	};
 
+	$: currentMatchup = unpredictedMatchups[currentlySelectedMatchup];
+
 	const tieAllowed = false;
 </script>
 
@@ -49,6 +51,9 @@
 			<span class="font-bold">Dar neatlikti spėjimai</span>
 			<span>{currentlySelectedMatchup + 1}/{unpredictedMatchups.length}</span>
 		</header>
+		{#if currentMatchup.type}
+			<h4>{currentMatchup.type}</h4>
+		{/if}
 		<PredictionCard
 			matchup={unpredictedMatchups[currentlySelectedMatchup]}
 			prediction={predictions[currentlySelectedMatchup]}

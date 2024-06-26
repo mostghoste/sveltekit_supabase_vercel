@@ -26,7 +26,7 @@
 		let predictionInvalid = true;
 		let home = predictions[currentlySelectedMatchup].prediction_home;
 		let away = predictions[currentlySelectedMatchup].prediction_away;
-		console.log(home);
+		// console.log(home);
 
 		if (home !== undefined && away !== undefined && home !== '' && away !== '') {
 			if (Number.isFinite(Number(home)) && Number.isFinite(Number(away))) {
@@ -44,6 +44,16 @@
 	};
 
 	$: currentMatchup = unpredictedMatchups[currentlySelectedMatchup];
+
+	// $: if (currentMatchup.team_home === 'TBD') {
+	// 	console.log('TBD HOME');
+	// }
+
+	// $: if (currentMatchup.team_away === 'TBD') {
+	// 	console.log('TBD AWAY');
+	// 	console.log(unpredictedMatchups[currentlySelectedMatchup]);
+	// 	unpredictedMatchups[
+	// }
 
 	const tieAllowed = false;
 </script>

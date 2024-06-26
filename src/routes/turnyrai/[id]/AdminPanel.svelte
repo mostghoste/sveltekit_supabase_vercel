@@ -156,7 +156,7 @@
 		<button class="btn btn-secondary" type="submit">Pridėti</button>
 	</form>
 
-	<section class="bg-black bg-opacity-20 rounded-box flex flex-col gap-1 p-2">
+	<!-- <section class="bg-black bg-opacity-20 rounded-box flex flex-col gap-1 p-2">
 		<h3>Playoff varžybų pridėjimas</h3>
 		<img src={Bracket} alt="Bracket example" />
 
@@ -166,7 +166,7 @@
 			<input type="text" class="input input-bordered" placeholder={`Komanda ${index * 2 + 2}`} />
 		{/each}
 		<button class="btn btn-secondary" type="submit">Generuoti varžybas</button>
-	</section>
+	</section> -->
 
 	<section
 		class="bg-black bg-opacity-20 rounded-box flex flex-col gap-1 p-2 overflow-scroll max-w-80"

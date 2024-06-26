@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tr } from 'date-fns/locale';
 	import PredictionCard from './PredictionCard.svelte';
 
 	type Prediction = {
@@ -44,6 +45,7 @@
 	};
 
 	$: currentMatchup = unpredictedMatchups[currentlySelectedMatchup];
+	$: currentPrediction = predictions[currentlySelectedMatchup];
 
 	// $: if (currentMatchup.team_home === 'TBD') {
 	// 	console.log('TBD HOME');
@@ -56,6 +58,8 @@
 	// }
 
 	const tieAllowed = false;
+
+	$: submitScreen = false;
 </script>
 
 {#if unpredictedMatchups && unpredictedMatchups.length > 0}
@@ -82,10 +86,30 @@ Teisingas TAIP spėjimas duoda 1 tašką.">Ar bus baudinių serija?</span
 				title="Teisingas NE spėjimas duoda 0.25 taško.
 Teisingas TAIP spėjimas duoda 1 tašką."
 				type="checkbox"
-				bind:checked={currentMatchup.penalty_series}
+				bind:checked={currentPrediction.penalty_series}
 				class="checkbox checkbox-success checkbox-xs"
 			/>
 		</div>
+		{#if submitScreen}
+			<table class="table-auto">
+				<thead>
+					<tr>
+						<th>Varžybos</th>
+						<th>Spėjimas</th>
+						<th>Baudiniai</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each predictions as prediction}
+						<tr>
+							<td>{prediction.home_team} - {prediction.away_team}</td>
+							<td>{prediction.prediction_home} : {prediction.prediction_away}</td>
+							<td>{prediction.penalty_series ? 'Taip' : 'Ne'}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		{/if}
 		<footer class="flex gap-2 justify-between">
 			<button
 				on:click={() => {
@@ -111,12 +135,11 @@ Teisingas TAIP spėjimas duoda 1 tašką."
 			{:else}
 				<button
 					on:click={() => {
-						if (currentlySelectedMatchup + 1 < unpredictedMatchups.length) {
-							currentlySelectedMatchup = currentlySelectedMatchup + 1;
-						}
+						submitScreen = true;
 					}}
 					class="btn btn-primary btn-success"
-					type="submit">Peržiūrėti</button
+					type="submit"
+					disabled={validatePrediction()}>Peržiūrėti</button
 				>
 			{/if}
 		</footer>

@@ -63,6 +63,19 @@
 			{tieAllowed}
 			{onUpdateScore}
 		></PredictionCard>
+		<div class="flex text-sm gap-2 items-center justify-end mr-2">
+			<span
+				title="Teisingas NE spėjimas duoda 0.25 taško.
+Teisingas TAIP spėjimas duoda 1 tašką.">Ar bus baudinių serija?</span
+			>
+			<input
+				title="Teisingas NE spėjimas duoda 0.25 taško.
+Teisingas TAIP spėjimas duoda 1 tašką."
+				type="checkbox"
+				checked={false}
+				class="checkbox checkbox-success checkbox-xs"
+			/>
+		</div>
 		<footer class="flex gap-2 justify-between">
 			<button
 				on:click={() => {

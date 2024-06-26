@@ -5,6 +5,7 @@
 	import Predictions from './Predictions.svelte';
 	import Leaderboard from './Leaderboard.svelte';
 	import { format } from 'date-fns';
+	import { el } from 'date-fns/locale';
 
 	export let data: PageData;
 	$: ({
@@ -68,8 +69,9 @@
 		<p class="collapse-title p-0 m-0 flex justify-center items-center text-xl font-medium">
 			🔜 Ateinančios varžybos ({matchups?.length || 0})
 		</p>
-		<div class="collapse-content">
+		<div class="collapse-contents">
 			{#if matchups}
+				<!-- <p>Paspaudus ant paryškintų komandų sužinosi iš kokių varžybų ateis komanda</p> -->
 				<table>
 					<thead class="font-bold">
 						<td>Komandos</td>
@@ -82,7 +84,17 @@
 						return new Date(a.start_time) - new Date(b.start_time);
 					})) as matchup}
 						<tr>
-							<td>{matchup.team_home} - {matchup.team_away}</td>
+							<td>
+								{#if matchup.team_home === 'TBD' && matchup.home_previous}
+									<span class="font-bold" title={`Nugalėtojas iš varžybų ${matchup.home_previous}`}
+										>{matchup.team_home}</span
+									>
+								{:else}
+									<span>{matchup.team_home}</span>
+								{/if}
+								-
+								<span>{matchup.team_away}</span>
+							</td>
 							<td>{format(new Date(matchup.start_time), 'MM-dd HH:mm')}</td>
 							<td>{matchup.type}</td>
 						</tr>

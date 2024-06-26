@@ -9,6 +9,9 @@
 	};
 
 	export let unpredictedMatchups = [];
+	unpredictedMatchups.sort(
+		(a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+	);
 	let predictions: Prediction[] = unpredictedMatchups.map((pred) => {
 		return { home_team: pred.team_home, away_team: pred.team_away };
 	});

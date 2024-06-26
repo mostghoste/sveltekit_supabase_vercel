@@ -4,6 +4,7 @@
 	import type { PageData } from './$types';
 	import Predictions from './Predictions.svelte';
 	import Leaderboard from './Leaderboard.svelte';
+	import { format } from 'date-fns';
 
 	export let data: PageData;
 	$: ({
@@ -69,13 +70,24 @@
 		</p>
 		<div class="collapse-content">
 			{#if matchups}
-				<ol>
-					{#each (matchups = matchups?.sort((a, b) => {
-						a.created_at - b.created_at;
+				<table>
+					<thead class="font-bold">
+						<td>Komandos</td>
+						<td>Laikas</td>
+						<td>Tipas</td>
+					</thead>
+					{#each (matchups = matchups.sort((a, b) => {
+						if (!a.start_time) return 1;
+						if (!b.start_time) return -1;
+						return new Date(a.start_time) - new Date(b.start_time);
 					})) as matchup}
-						<li class="text-sm text-left">{matchup.team_home} - {matchup.team_away}</li>
+						<tr>
+							<td>{matchup.team_home} - {matchup.team_away}</td>
+							<td>{format(new Date(matchup.start_time), 'MM-dd HH:mm')}</td>
+							<td>{matchup.type}</td>
+						</tr>
 					{/each}
-				</ol>
+				</table>
 			{:else}
 				<p>Ateinančių varžybų nerasta</p>
 			{/if}

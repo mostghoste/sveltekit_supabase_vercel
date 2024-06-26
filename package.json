@@ -37,6 +37,7 @@
 	"dependencies": {
 		"@supabase/ssr": "^0.3.0",
 		"@supabase/supabase-js": "^2.43.2",
-		"daisyui": "^4.12.2"
+		"daisyui": "^4.12.2",
+		"date-fns": "^3.6.0"
 	}
 }

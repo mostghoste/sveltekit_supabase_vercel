@@ -23,15 +23,13 @@
 		let predictionInvalid = true;
 		let home = predictions[currentlySelectedMatchup].prediction_home;
 		let away = predictions[currentlySelectedMatchup].prediction_away;
+		console.log(home);
 
-		if (home !== undefined && away !== undefined) {
-			// console.log('Prediction has score');
-			try {
+		if (home !== undefined && away !== undefined && home !== '' && away !== '') {
+			if (Number.isFinite(Number(home)) && Number.isFinite(Number(away))) {
 				if (Number(home) >= 0 && Number(away) >= 0) {
 					predictionInvalid = false;
 				}
-			} catch {
-				predictionInvalid = false;
 			}
 		}
 

@@ -28,14 +28,14 @@
 		<div class="flex justify-evenly">
 			<input
 				bind:value={home_score_prediction}
+				on:input={() => onUpdateScore(home_score_prediction, away_score_prediction)}
 				class="input input-bordered input-sm w-12 text-center"
-				placeholder="0"
 				type="text"
 			/>
 			<input
 				bind:value={away_score_prediction}
+				on:input={() => onUpdateScore(home_score_prediction, away_score_prediction)}
 				class="input input-bordered input-sm w-12 text-center"
-				placeholder="0"
 				type="text"
 			/>
 		</div>

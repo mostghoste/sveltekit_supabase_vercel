@@ -115,8 +115,10 @@
 									<span>{matchup.team_away}</span>
 								{/if}
 							</td>
-							<td>{format(new Date(matchup.start_time), 'MM-dd HH:mm')}</td>
-							<td>{matchup.type}</td>
+							<td
+								>{matchup.start_time ? format(new Date(matchup.start_time), 'MM-dd HH:mm') : ''}</td
+							>
+							<td>{matchup.type || ''}</td>
 						</tr>
 					{/each}
 				</table>

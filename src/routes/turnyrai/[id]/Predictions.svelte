@@ -35,8 +35,14 @@
 			}
 		}
 
+		if (!tieAllowed && home === away) {
+			predictionInvalid = true;
+		}
+
 		return predictionInvalid;
 	};
+
+	const tieAllowed = false;
 </script>
 
 {#if unpredictedMatchups && unpredictedMatchups.length > 0}
@@ -48,6 +54,7 @@
 		<PredictionCard
 			matchup={unpredictedMatchups[currentlySelectedMatchup]}
 			prediction={predictions[currentlySelectedMatchup]}
+			{tieAllowed}
 			{onUpdateScore}
 		></PredictionCard>
 		<footer class="flex gap-2 justify-between">

@@ -8,6 +8,8 @@
 	$: away_score_prediction = prediction.prediction_away;
 
 	console.log(home_score_prediction);
+
+	export let tieAllowed = true;
 </script>
 
 <article class="bg-base-200 rounded-box flex justify-between p-2 gap-2 text-sm">
@@ -46,14 +48,16 @@
 				}}
 				class="btn btn-sm btn-secondary px-2">1:0</button
 			>
-			<button
-				on:click={() => {
-					home_score_prediction = 1;
-					away_score_prediction = 1;
-					onUpdateScore(home_score_prediction, away_score_prediction);
-				}}
-				class="btn btn-sm btn-secondary px-2">1:1</button
-			>
+			{#if tieAllowed}
+				<button
+					on:click={() => {
+						home_score_prediction = 1;
+						away_score_prediction = 1;
+						onUpdateScore(home_score_prediction, away_score_prediction);
+					}}
+					class="btn btn-sm btn-secondary px-2">1:1</button
+				>
+			{/if}
 			<button
 				on:click={() => {
 					home_score_prediction = 0;

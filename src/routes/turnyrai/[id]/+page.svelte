@@ -24,7 +24,7 @@
 		unpredictedMatchups = matchups.filter((matchup) => {
 			return !matchup_predictions.some((prediction) => prediction.matchup_id === matchup.id);
 		});
-		unpredictedMatchups = unpredictedMatchups.filter((matchup) => matchup.predictions_open);
+		unpredictedMatchups = unpredictedMatchups.filter((matchup) => matchup.status === 'open');
 	} else if (matchups && !matchup_predictions) {
 		unpredictedMatchups = matchups;
 	}
@@ -67,7 +67,7 @@
 
 {#if tournament_participant}
 	<p class="text-sm">Tu šiame turnyre <strong>dalyvauji</strong></p>
-	<!-- <Predictions {unpredictedMatchups}></Predictions> -->
+	<Predictions {unpredictedMatchups}></Predictions>
 {:else}
 	<p class="text-sm mt-2 mb-1">Tu šiame turnyre dar <strong>nedalyvauji</strong></p>
 	<h3 class="text-left">Dalyvaudamas turnyre įsipareigoji:</h3>

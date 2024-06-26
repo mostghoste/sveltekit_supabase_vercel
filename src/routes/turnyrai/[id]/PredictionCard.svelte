@@ -14,7 +14,7 @@
 
 <article class="bg-base-200 rounded-box flex justify-between p-2 gap-2 text-sm">
 	<button
-		class="min-w-24 h-24 bg-primary-content text-primary flex justify-center items-center rounded-box"
+		class="min-w-24 h-24 border border-base-200 shadow-md bg-base-100 flex justify-center items-center rounded-box"
 		on:click={() => {
 			home_score_prediction = 1;
 			away_score_prediction = 0;
@@ -24,7 +24,7 @@
 		{matchup.team_home}
 	</button>
 	<div class=" w-full justify-evenly flex flex-col">
-		<div></div>
+		<!-- <div></div> -->
 		<div class="flex justify-evenly">
 			<input
 				bind:value={home_score_prediction}
@@ -39,7 +39,7 @@
 				type="text"
 			/>
 		</div>
-		<div>
+		<!-- <div>
 			<button
 				on:click={() => {
 					home_score_prediction = 1;
@@ -66,7 +66,7 @@
 				}}
 				class="btn btn-sm btn-secondary px-2">0:1</button
 			>
-		</div>
+		</div> -->
 	</div>
 	<button
 		on:click={() => {
@@ -74,7 +74,7 @@
 			away_score_prediction = 1;
 			onUpdateScore(home_score_prediction, away_score_prediction);
 		}}
-		class="min-w-24 h-24 bg-primary-content text-primary flex justify-center items-center rounded-box text-"
+		class="min-w-24 h-24 border border-base-200 shadow-md bg-base-100 flex justify-center items-center rounded-box"
 	>
 		{matchup.team_away}
 	</button>

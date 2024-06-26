@@ -179,7 +179,7 @@
 
 {#if tournament_participant}
 	<h2>Mano spėjimai</h2>
-	<h3>Dar neatlikti spėjimai ({unpredictedMatchups.length})</h3>
+	<!-- <h3>Dar neatlikti spėjimai ({unpredictedMatchups.length})</h3>
 	{#if unpredictedMatchups && unpredictedMatchups.length > 0}
 		<section class="flex flex-col gap-2">
 			{#each unpredictedMatchups as matchup}
@@ -246,7 +246,7 @@
 		</section>
 	{:else}
 		<p>Visi galimi spėjimai atlikti</p>
-	{/if}
+	{/if} -->
 
 	<h3>Patvirtinti spėjimai</h3>
 	{#if joinedPredictions && joinedPredictions.length > 0}

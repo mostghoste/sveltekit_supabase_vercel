@@ -416,7 +416,34 @@ export const actions: Actions = {
             console.error('Error in editMatchups function:', error);
             return { error: 'Error processing matchups' };
         }
-    }
+    },
+    submitPredictions: async ({ request, params, locals: { supabase, user } }) => {
+        const formData = await request.formData();
+        const predictions = JSON.parse(formData.get('predictions') as string);
+
+        const predictionInserts = predictions.map((prediction) => ({
+            user_id: user?.id,
+            tournament_id: params.id,
+            matchup_id: prediction.matchup_id,
+            score_home: prediction.prediction_home,
+            score_away: prediction.prediction_away,
+            penalty_series: prediction.penalty_series || false,
+            matchup_outcome: prediction.matchup_outcome,
+            selected_team: prediction.selected_team
+        }));
+
+        const { data, error } = await supabase
+            .from('matchup_predictions')
+            .upsert(predictionInserts)
+            .select();
+
+        if (error) {
+            console.error("Error inserting predictions:", error);
+            return { error: 'Error inserting predictions' };
+        }
+
+        return { success: true, predictions: data };
+    },
     
     
   };

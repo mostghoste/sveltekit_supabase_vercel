@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { tr } from 'date-fns/locale';
+	import { invalidateAll } from '$app/navigation';
+
+	export let unpredictedMatchups = [];
+	export let tournament;
+
 	import PredictionCard from './PredictionCard.svelte';
 
 	type Prediction = {
@@ -7,20 +11,42 @@
 		away_team: string;
 		prediction_home?: number;
 		prediction_away?: number;
+		penalty_series?: boolean;
+		matchup_id: string;
+		matchup_outcome: string;
+		selected_team: string;
 	};
 
-	export let unpredictedMatchups = [];
 	unpredictedMatchups.sort(
 		(a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
 	);
 	let predictions: Prediction[] = unpredictedMatchups.map((pred) => {
-		return { home_team: pred.team_home, away_team: pred.team_away, penalty_series: false };
+		return {
+			home_team: pred.team_home,
+			away_team: pred.team_away,
+			penalty_series: false,
+			matchup_id: pred.id,
+			matchup_outcome: '',
+			selected_team: ''
+		};
 	});
 	let currentlySelectedMatchup = 0;
 
 	const onUpdateScore = (home: number, away: number) => {
 		predictions[currentlySelectedMatchup].prediction_home = home;
 		predictions[currentlySelectedMatchup].prediction_away = away;
+
+		if (home > away) {
+			predictions[currentlySelectedMatchup].matchup_outcome = 'home_win';
+			predictions[currentlySelectedMatchup].selected_team =
+				predictions[currentlySelectedMatchup].home_team;
+		} else if (home < away) {
+			predictions[currentlySelectedMatchup].matchup_outcome = 'away_win';
+			predictions[currentlySelectedMatchup].selected_team =
+				predictions[currentlySelectedMatchup].away_team;
+		} else {
+			predictions[currentlySelectedMatchup].matchup_outcome = 'tie';
+		}
 	};
 
 	$: validatePrediction = () => {
@@ -60,6 +86,26 @@
 	const tieAllowed = false;
 
 	$: submitScreen = false;
+
+	const handleSubmitPredictions = async () => {
+		const formData = new FormData();
+		formData.append('predictions', JSON.stringify(predictions));
+
+		const response = await fetch(`/turnyrai/${tournament.id}?/submitPredictions`, {
+			method: 'POST',
+			body: formData
+		});
+
+		const result = await response.json();
+		console.log(result.data);
+
+		if (result.data[0]) {
+			alert('Spėjimai sėkmingai išsaugoti');
+			invalidateAll();
+		} else {
+			alert('Klaida išsaugant spėjimus');
+		}
+	};
 </script>
 
 {#if unpredictedMatchups && unpredictedMatchups.length > 0}
@@ -95,7 +141,7 @@
 				>
 				<button
 					on:click={() => {
-						submitScreen = true;
+						handleSubmitPredictions();
 					}}
 					class="btn btn-primary btn-success"
 					type="submit"

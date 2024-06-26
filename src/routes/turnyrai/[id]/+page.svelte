@@ -67,7 +67,7 @@
 
 {#if tournament_participant}
 	<p class="text-sm">Tu šiame turnyre <strong>dalyvauji</strong></p>
-	<Predictions {unpredictedMatchups}></Predictions>
+	<Predictions {unpredictedMatchups} {tournament}></Predictions>
 {:else}
 	<p class="text-sm mt-2 mb-1">Tu šiame turnyre dar <strong>nedalyvauji</strong></p>
 	<h3 class="text-left">Dalyvaudamas turnyre įsipareigoji:</h3>

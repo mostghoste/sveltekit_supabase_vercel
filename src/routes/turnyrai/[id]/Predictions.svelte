@@ -149,6 +149,7 @@
 				<thead>
 					<tr>
 						<th>Varžybos</th>
+						<th>Laimėtojas</th>
 						<th>Spėjimas</th>
 						<th>Baudiniai</th>
 					</tr>
@@ -157,6 +158,7 @@
 					{#each predictions as prediction}
 						<tr>
 							<td>{prediction.home_team} - {prediction.away_team}</td>
+							<td>{prediction.selected_team}</td>
 							<td>{prediction.prediction_home} : {prediction.prediction_away}</td>
 							<td>{prediction.penalty_series ? 'Taip' : 'Ne'}</td>
 						</tr>

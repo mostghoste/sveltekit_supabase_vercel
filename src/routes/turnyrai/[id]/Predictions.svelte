@@ -94,20 +94,26 @@
 		return predictionInvalid;
 	};
 
+	$: displayGuessDisclaimer = false;
+
 	$: currentMatchup = unpredictedMatchups[currentlySelectedMatchup];
 	$: currentPrediction = predictions[currentlySelectedMatchup];
 	$: displayedMatchup = { ...currentMatchup };
 
 	$: if (currentMatchup.team_home === 'TBD' && currentMatchup.home_previous) {
 		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup.home_previous);
-		// console.log(votedWinner);
 		displayedMatchup = { ...displayedMatchup, team_home: votedWinner?.selected_team + '*' };
+		displayGuessDisclaimer = true;
 	}
 
 	$: if (currentMatchup.team_away === 'TBD' && currentMatchup.away_previous) {
 		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup.away_previous);
-		// console.log(votedWinner);
 		displayedMatchup = { ...displayedMatchup, team_away: votedWinner?.selected_team + '*' };
+		displayGuessDisclaimer = true;
+	}
+
+	$: if (currentMatchup.team_home !== 'TBD' && currentMatchup.team_away !== 'TBD') {
+		displayGuessDisclaimer = false;
 	}
 
 	const tieAllowed = false;
@@ -235,6 +241,11 @@
 					>
 				{/if}
 			</footer>
+			{#if displayGuessDisclaimer}
+				<p class="text-xs text-left">
+					*Komanda paimta iš praeitų spėjimų. Komandai į turą nepatekus taškai negaunami.
+				</p>
+			{/if}
 		{/if}
 	</section>
 {/if}

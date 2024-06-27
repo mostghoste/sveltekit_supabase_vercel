@@ -139,6 +139,27 @@
 			alert('Klaida išsaugant spėjimus');
 		}
 	};
+
+	const predictionToMatchupShort = (prediction: Prediction) => {
+		const matchup = unpredictedMatchups.find((m) => m.id === prediction.matchup_id);
+		console.log(matchup);
+
+		let home = 'Bulkis';
+		if (prediction.home_team !== 'TBD') {
+			home = prediction.home_team;
+		} else if (matchup.home_previous) {
+			home = getSelectedTeam(matchup.home_previous) + '*' || 'Null';
+		}
+
+		let away = 'Tulkis';
+		if (prediction.away_team !== 'TBD') {
+			away = prediction.away_team;
+		} else if (matchup.away_previous) {
+			away = getSelectedTeam(matchup.away_previous) + '*' || 'Null';
+		}
+
+		return `${home} - ${away}`;
+	};
 </script>
 
 {#if unpredictedMatchups && unpredictedMatchups.length > 0}
@@ -157,7 +178,7 @@
 				<tbody>
 					{#each predictions as prediction}
 						<tr>
-							<td>{prediction.home_team} - {prediction.away_team}</td>
+							<td>{predictionToMatchupShort(prediction)}</td>
 							<td>{prediction.selected_team}</td>
 							<td>{prediction.prediction_home} : {prediction.prediction_away}</td>
 							<td>{prediction.penalty_series ? 'Taip' : 'Ne'}</td>
@@ -244,9 +265,7 @@
 				{/if}
 			</footer>
 			{#if displayGuessDisclaimer}
-				<p class="text-xs text-left">
-					*Komanda paimta iš praeitų spėjimų. Komandai į turą nepatekus taškai negaunami.
-				</p>
+				<p class="text-xs text-left">*Komanda paimta iš praeitų spėjimų.</p>
 			{/if}
 		{/if}
 	</section>

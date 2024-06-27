@@ -32,18 +32,42 @@
 	});
 	let currentlySelectedMatchup = 0;
 
+	// Get selected team from predictions from match id
+	const getSelectedTeam = (matchupId: string) => {
+		let votedWinner = predictions.find((p) => p.matchup_id === matchupId);
+		return votedWinner?.selected_team;
+	};
+
 	const onUpdateScore = (home: number, away: number) => {
 		predictions[currentlySelectedMatchup].prediction_home = home;
 		predictions[currentlySelectedMatchup].prediction_away = away;
 
 		if (home > away) {
 			predictions[currentlySelectedMatchup].matchup_outcome = 'home_win';
-			predictions[currentlySelectedMatchup].selected_team =
-				predictions[currentlySelectedMatchup].home_team;
+			if (
+				predictions[currentlySelectedMatchup].home_team === 'TBD' &&
+				unpredictedMatchups[currentlySelectedMatchup].home_previous
+			) {
+				predictions[currentlySelectedMatchup].selected_team = getSelectedTeam(
+					unpredictedMatchups[currentlySelectedMatchup].home_previous
+				);
+			} else {
+				predictions[currentlySelectedMatchup].selected_team =
+					predictions[currentlySelectedMatchup].home_team;
+			}
 		} else if (home < away) {
 			predictions[currentlySelectedMatchup].matchup_outcome = 'away_win';
-			predictions[currentlySelectedMatchup].selected_team =
-				predictions[currentlySelectedMatchup].away_team;
+			if (
+				predictions[currentlySelectedMatchup].away_team === 'TBD' &&
+				unpredictedMatchups[currentlySelectedMatchup].away_previous
+			) {
+				predictions[currentlySelectedMatchup].selected_team = getSelectedTeam(
+					unpredictedMatchups[currentlySelectedMatchup].away_previous
+				);
+			} else {
+				predictions[currentlySelectedMatchup].selected_team =
+					predictions[currentlySelectedMatchup].away_team;
+			}
 		} else {
 			predictions[currentlySelectedMatchup].matchup_outcome = 'tie';
 		}

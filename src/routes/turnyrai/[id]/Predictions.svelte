@@ -74,14 +74,16 @@
 	$: currentPrediction = predictions[currentlySelectedMatchup];
 	$: displayedMatchup = { ...currentMatchup };
 
-	$: if (currentMatchup.team_home === 'TBD') {
-		console.log('TBD HOME');
+	$: if (currentMatchup.team_home === 'TBD' && currentMatchup.home_previous) {
+		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup.home_previous);
+		// console.log(votedWinner);
+		displayedMatchup = { ...displayedMatchup, team_home: votedWinner?.selected_team + '*' };
 	}
 
 	$: if (currentMatchup.team_away === 'TBD' && currentMatchup.away_previous) {
-		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup.id);
-		console.log(votedWinner);
-		// displayedMatchup = { ...displayedMatchup, team_away:  };
+		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup.away_previous);
+		// console.log(votedWinner);
+		displayedMatchup = { ...displayedMatchup, team_away: votedWinner?.selected_team + '*' };
 	}
 
 	const tieAllowed = false;

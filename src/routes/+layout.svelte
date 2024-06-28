@@ -33,16 +33,17 @@
 		class="artboard phone-4 flex items-center flex-col text-center rounded-box border-primary md:border lg:border p-2 bg-neutral-content overflow-y-scroll"
 	>
 		<header class="w-full flex justify-between items-center">
+			<a href="/" class="font-bold">👀 Stebėtojas</a>
 			<div class="flex gap-2">
 				{#if user}
-					<button class="btn btn-sm btn-primary" on:click={logout}>Atsijungti</button>
-					<div class="flex flex-col items-start">
+					<!-- <button class="btn btn-sm btn-primary" on:click={logout}>Atsijungti</button> -->
+					<div class="flex flex-col items-end">
 						<p class="text-xs">sveikas,</p>
 						<p class="font-bold text-sm">{profile?.username}{profile?.admin ? ' (Admin)' : ''}</p>
 					</div>
 				{/if}
 			</div>
-			<nav class="w-fit">
+			<!-- <nav class="w-fit">
 				<div class="dropdown dropdown-end">
 					<div tabindex="0" role="button" class="btn">
 						Tema
@@ -103,7 +104,7 @@
 						</li>
 					</ul>
 				</div>
-			</nav>
+			</nav> -->
 		</header>
 		<section class="flex-grow flex justify-center flex-col prose">
 			<slot></slot>

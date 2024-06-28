@@ -100,19 +100,19 @@
 	$: currentPrediction = predictions[currentlySelectedMatchup];
 	$: displayedMatchup = { ...currentMatchup };
 
-	$: if (currentMatchup.team_home === 'TBD' && currentMatchup.home_previous) {
-		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup.home_previous);
+	$: if (currentMatchup?.team_home === 'TBD' && currentMatchup?.home_previous) {
+		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup?.home_previous);
 		displayedMatchup = { ...displayedMatchup, team_home: votedWinner?.selected_team + '*' };
 		displayGuessDisclaimer = true;
 	}
 
-	$: if (currentMatchup.team_away === 'TBD' && currentMatchup.away_previous) {
-		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup.away_previous);
+	$: if (currentMatchup?.team_away === 'TBD' && currentMatchup?.away_previous) {
+		let votedWinner = predictions.find((p) => p.matchup_id === currentMatchup?.away_previous);
 		displayedMatchup = { ...displayedMatchup, team_away: votedWinner?.selected_team + '*' };
 		displayGuessDisclaimer = true;
 	}
 
-	$: if (currentMatchup.team_home !== 'TBD' && currentMatchup.team_away !== 'TBD') {
+	$: if (currentMatchup?.team_home !== 'TBD' && currentMatchup?.team_away !== 'TBD') {
 		displayGuessDisclaimer = false;
 	}
 

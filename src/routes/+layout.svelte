@@ -1,5 +1,5 @@
 <script>
-	import { goto, invalidate } from '$app/navigation';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import '../app.css';
 	import { redirect } from '@sveltejs/kit';
@@ -39,7 +39,17 @@
 					<!-- <button class="btn btn-sm btn-primary" on:click={logout}>Atsijungti</button> -->
 					<div class="flex flex-col items-end">
 						<p class="text-xs">sveikas,</p>
-						<p class="font-bold text-sm">{profile?.username}{profile?.admin ? ' (Admin)' : ''}</p>
+						<button
+							class="font-bold text-sm"
+							on:click={() => {
+								if (confirm(`Ar tikrai nori atsijungti, ${profile?.username}?`)) {
+									logout();
+									invalidateAll();
+								}
+							}}
+						>
+							{profile?.username}{profile?.admin ? ' (Admin)' : ''}
+						</button>
 					</div>
 				{/if}
 			</div>
